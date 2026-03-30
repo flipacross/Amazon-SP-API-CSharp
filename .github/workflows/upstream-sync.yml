@@ -34,19 +34,30 @@ jobs:
           git fetch upstream
 
       - name: Merge upstream into sync branch
+        id: merge_upstream
+        shell: bash
         run: |
           BRANCH_NAME="sync/upstream-$(date +%Y-%m-%d)"
-          git checkout -B "$BRANCH_NAME"
+          git checkout -B "$BRANCH_NAME" origin/main
           git merge upstream/main --no-edit
           echo "BRANCH_NAME=$BRANCH_NAME" >> "$GITHUB_ENV"
+          if git diff --quiet origin/main...HEAD; then
+            echo "HAS_CHANGES=false" >> "$GITHUB_ENV"
+            echo "No upstream changes to sync."
+          else
+            echo "HAS_CHANGES=true" >> "$GITHUB_ENV"
+          fi
 
       - name: Build merged branch
+        if: env.HAS_CHANGES == 'true'
         run: dotnet build ./Source/FikaAmazonAPI/FikaAmazonAPI.csproj --configuration Release
 
       - name: Push sync branch
+        if: env.HAS_CHANGES == 'true'
         run: git push --force-with-lease -u origin "${{ env.BRANCH_NAME }}"
 
       - name: Create or reuse pull request
+        if: env.HAS_CHANGES == 'true'
         env:
           GH_TOKEN: ${{ secrets.INFRA_REPO_TOKEN }}
         shell: bash
