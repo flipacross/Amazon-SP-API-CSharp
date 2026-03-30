@@ -1,73 +1,73 @@
 name: Upstream Sync
 
 on:
-  schedule:
-    - cron: "0 6 * * 1"
-  workflow_dispatch:
+    schedule:
+        - cron: "0 6 * * 1"
+    workflow_dispatch:
 
 permissions:
-  contents: write
-  pull-requests: write
-  packages: read
+    contents: write
+    pull-requests: write
+    packages: read
 
 jobs:
-  sync-upstream:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+    sync-upstream:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 10.0.x
-          source-url: https://nuget.pkg.github.com/flipacross/index.json
-        env:
-          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - name: Setup .NET
+              uses: actions/setup-dotnet@v4
+              with:
+                  dotnet-version: 10.0.x
+                  source-url: https://nuget.pkg.github.com/flipacross/index.json
+              env:
+                  GH_TOKEN: ${{ secrets.INFRA_REPO_TOKEN }}
 
-      - name: Configure upstream remote
-        run: |
-          git remote remove upstream 2>/dev/null || true
-          git remote add upstream https://github.com/abuzuhri/Amazon-SP-API-CSharp.git
-          git fetch upstream
+            - name: Configure upstream remote
+              run: |
+                  git remote remove upstream 2>/dev/null || true
+                  git remote add upstream https://github.com/abuzuhri/Amazon-SP-API-CSharp.git
+                  git fetch upstream
 
-      - name: Merge upstream into sync branch
-        run: |
-          BRANCH_NAME="sync/upstream-$(date +%Y-%m-%d)"
-          git checkout -B "$BRANCH_NAME"
-          git merge upstream/main --no-edit
-          echo "BRANCH_NAME=$BRANCH_NAME" >> "$GITHUB_ENV"
+            - name: Merge upstream into sync branch
+              run: |
+                  BRANCH_NAME="sync/upstream-$(date +%Y-%m-%d)"
+                  git checkout -B "$BRANCH_NAME"
+                  git merge upstream/main --no-edit
+                  echo "BRANCH_NAME=$BRANCH_NAME" >> "$GITHUB_ENV"
 
-      - name: Build merged branch
-        run: dotnet build ./Source/FikaAmazonAPI/FikaAmazonAPI.csproj --configuration Release
+            - name: Build merged branch
+              run: dotnet build ./Source/FikaAmazonAPI/FikaAmazonAPI.csproj --configuration Release
 
-      - name: Push sync branch
-        run: git push --force-with-lease -u origin "${{ env.BRANCH_NAME }}"
+            - name: Push sync branch
+              run: git push --force-with-lease -u origin "${{ env.BRANCH_NAME }}"
 
-      - name: Create or reuse pull request
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        shell: bash
-        run: |
-          EXISTING_PR_URL=$(gh pr list --head "${{ env.BRANCH_NAME }}" --base main --state open --json url --jq '.[0].url')
-          if [ -n "$EXISTING_PR_URL" ]; then
-            echo "Pull request already exists: $EXISTING_PR_URL"
-            exit 0
-          fi
+            - name: Create or reuse pull request
+              env:
+                  GH_TOKEN: ${{ secrets.INFRA_REPO_TOKEN }}
+              shell: bash
+              run: |
+                  EXISTING_PR_URL=$(gh pr list --head "${{ env.BRANCH_NAME }}" --base main --state open --json url --jq '.[0].url')
+                  if [ -n "$EXISTING_PR_URL" ]; then
+                    echo "Pull request already exists: $EXISTING_PR_URL"
+                    exit 0
+                  fi
 
-          gh pr create \
-            --base main \
-            --head "${{ env.BRANCH_NAME }}" \
-            --title "chore: sync upstream Amazon-SP-API-CSharp" \
-            --body "$(cat <<'EOF'
-          ## Summary
-          - merge latest changes from `abuzuhri/Amazon-SP-API-CSharp`
-          - preserve FlipAcross fork customizations
-          - validate merged branch with a Release build
+                  gh pr create \
+                    --base main \
+                    --head "${{ env.BRANCH_NAME }}" \
+                    --title "chore: sync upstream Amazon-SP-API-CSharp" \
+                    --body "$(cat <<'EOF'
+                  ## Summary
+                  - merge latest changes from `abuzuhri/Amazon-SP-API-CSharp`
+                  - preserve FlipAcross fork customizations
+                  - validate merged branch with a Release build
 
-          ## Test plan
-          - [x] `dotnet build ./Source/FikaAmazonAPI/FikaAmazonAPI.csproj --configuration Release`
-          EOF
-          )"
+                  ## Test plan
+                  - [x] `dotnet build ./Source/FikaAmazonAPI/FikaAmazonAPI.csproj --configuration Release`
+                  EOF
+                  )"
