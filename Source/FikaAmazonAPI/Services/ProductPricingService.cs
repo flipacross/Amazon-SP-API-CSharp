@@ -100,11 +100,9 @@ namespace FikaAmazonAPI.Services
                 {
                     "uri": "/products/pricing/v0/items/{ASIN}/offers",
                     "method": "GET",
-                    "queryParams": {
-                        "MarketplaceId": "ATVPDKIKX0DER",
-                        "ItemCondition": "New",
-                        "CustomerType": "Consumer"
-                    }
+                    "MarketplaceId": "ATVPDKIKX0DER",
+                    "ItemCondition": "New",
+                    "CustomerType": "Consumer"
                 }
             ]
              */
@@ -123,11 +121,9 @@ Task.Run(() => GetListingOffersBatchAsync(parameterGetItemOffersBatchRequest)).C
                 {
                     "uri": "/products/pricing/v0/listings/{SellerSKU}/offers",
                     "method": "GET",
-                    "queryParams": {
-                        "MarketplaceId": "ATVPDKIKX0DER",
-                        "ItemCondition": "New",
-                        "CustomerType": "Consumer"
-                    }
+                    "MarketplaceId": "ATVPDKIKX0DER",
+                    "ItemCondition": "New",
+                    "CustomerType": "Consumer"
                 }
             ]
              */

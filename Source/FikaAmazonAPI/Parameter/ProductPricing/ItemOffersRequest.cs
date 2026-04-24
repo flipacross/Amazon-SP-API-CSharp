@@ -28,25 +28,16 @@ namespace FikaAmazonAPI.Parameter.ProductPricing
         [JsonProperty("method")]
         public HttpMethodEnum HttpMethod { get; set; }
 
-        //[JsonProperty("headers")]
-        //public Dictionary<string, string> Headers { get; set; }
-
-        [JsonProperty("queryParams")]
+        [JsonIgnore]
         public ParameterGetItemOffers QueryParams { get; set; }
 
-        ///// <summary>
-        ///// A marketplace identifier. Specifies the marketplace for which prices are returned.
-        ///// </summary>
-        //[DataMember(Name = "MarketplaceId")]
-        //public string MarketplaceId { get; set; }
+        [JsonProperty("MarketplaceId")]
+        public string MarketplaceId => QueryParams?.MarketplaceId;
 
-        //[DataMember(Name = "ItemCondition")]
-        //public ItemCondition ItemCondition { get; set; }
+        [JsonProperty("CustomerType")]
+        public CustomerType? CustomerType => QueryParams?.CustomerType;
 
-        //[DataMember(Name = "CustomerType")]
-        //public CustomerType? CustomerType { get; set; }
-
-        //[JsonIgnore]
-        //public string Asin { get; set; }
+        [JsonProperty("ItemCondition")]
+        public ItemCondition ItemCondition => QueryParams?.ItemCondition ?? default;
     }
 }
