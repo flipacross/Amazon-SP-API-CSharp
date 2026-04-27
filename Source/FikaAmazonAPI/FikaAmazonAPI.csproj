@@ -7,9 +7,9 @@
     <Product>FlipAcross Fika Amazon</Product>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <LangVersion>8.0</LangVersion>
-    <VersionPrefix>1.9.23</VersionPrefix>
-    <AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
-    <FileVersion>$(VersionPrefix).0</FileVersion>
+    <VersionPrefix>1.9.27</VersionPrefix>
+    <AssemblyVersion>1.9.27</AssemblyVersion>
+    <FileVersion>1.9.27</FileVersion>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/flipacross/Amazon-SP-API-CSharp</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
