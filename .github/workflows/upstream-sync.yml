@@ -29,6 +29,8 @@ jobs:
 
       - name: Configure upstream remote
         run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git remote remove upstream 2>/dev/null || true
           git remote add upstream https://github.com/abuzuhri/Amazon-SP-API-CSharp.git
           git fetch upstream
