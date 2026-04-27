@@ -28,16 +28,17 @@ namespace FikaAmazonAPI.Parameter.ProductPricing
         [JsonProperty("method")]
         public HttpMethodEnum HttpMethod { get; set; }
 
+        // Amazon changed their batch API contract: query params must be serialized at the top level, not nested under "queryParams".
         [JsonIgnore]
         public ParameterGetItemOffers QueryParams { get; set; }
 
         [JsonProperty("MarketplaceId")]
         public string MarketplaceId => QueryParams?.MarketplaceId;
 
-        [JsonProperty("CustomerType")]
-        public CustomerType? CustomerType => QueryParams?.CustomerType;
-
         [JsonProperty("ItemCondition")]
         public ItemCondition ItemCondition => QueryParams?.ItemCondition ?? default;
+
+        [JsonProperty("CustomerType")]
+        public CustomerType? CustomerType => QueryParams?.CustomerType;
     }
 }

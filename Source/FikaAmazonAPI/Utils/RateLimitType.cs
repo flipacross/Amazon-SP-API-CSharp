@@ -19,6 +19,8 @@
         Order_UpdateVerificationStatus,
         Order_UpdateOrderItemsApprovals,
         Order_ShipmentConfirmation,
+        OrderV20260101_SearchOrders,
+        OrderV20260101_GetOrder,
 
         Report_GetReports,
         Report_GetReport,
@@ -207,6 +209,7 @@
         ProductPricing_GetItemOffers,
         ProductPricing_GetItemOffersBatch,
         ProductPricing_GetListingOffersBatch,
+        ProductPricing_GetCompetitiveSummary,
 
         Sales_GetOrderMetrics,
 
@@ -242,6 +245,28 @@
 		VendorTransactionStatus_GetTransaction,
         
         VendorDirectFulfillmentInventory_SubmitInventoryUpdate,
+
+        Service_GetServiceJobByServiceJobId,
+        Service_GetServiceJobs,
+        Service_CancelServiceJobByServiceJobId,
+        Service_CompleteServiceJobByServiceJobId,
+
+        Replenishment_ListOffers,
+        Replenishment_ListOfferMetrics,
+        Replenishment_GetSellingPartnerMetrics,
+
+        ApplicationManagement_RotateApplicationClientSecret,
+
+        AplusContent_SearchContentDocuments,
+        AplusContent_CreateContentDocument,
+        AplusContent_GetContentDocument,
+        AplusContent_UpdateContentDocument,
+        AplusContent_ListContentDocumentAsinRelations,
+        AplusContent_PostContentDocumentAsinRelations,
+        AplusContent_ValidateContentDocumentAsinRelations,
+        AplusContent_SearchContentPublishRecords,
+        AplusContent_PostContentDocumentApprovalSubmission,
+        AplusContent_PostContentDocumentSuspendSubmission,
 
     }
 }

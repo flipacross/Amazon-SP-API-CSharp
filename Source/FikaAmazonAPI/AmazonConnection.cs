@@ -13,9 +13,16 @@ namespace FikaAmazonAPI
     public class AmazonConnection
     {
         private readonly ILoggerFactory _loggerFactory;
-        private AmazonCredential Credentials { get; set; }
+        /// <summary>
+        /// The credential bag this connection is using. Exposed so callers can mutate
+        /// rotation-target fields like <see cref="AmazonCredential.ClientSecret"/> in place
+        /// after a successful client-secret rotation. The setter is private — replace the
+        /// whole connection if you need a different credential object.
+        /// </summary>
+        public AmazonCredential Credentials { get; private set; }
         public AppIntegrationsServiceV20240401 AppIntegrationsServiceV20240401 => this._AppIntegrationsServiceV20240401 ?? throw _NoCredentials;
         public OrderService Orders => this._Orders ?? throw _NoCredentials;
+        public OrderServiceV20260101 OrdersV20260101 => this._OrdersV20260101 ?? throw _NoCredentials;
         public ReportService Reports => this._Reports ?? throw _NoCredentials;
         public SolicitationService Solicitations => this._Solicitations ?? throw _NoCredentials;
         public FinancialService Financial => this._Financials ?? throw _NoCredentials;
@@ -53,10 +60,13 @@ namespace FikaAmazonAPI
         public VendorDirectFulfillmentInventoryService VendorDirectFulfillmentInventory => this._VendorDirectFulfillmentInventory ?? throw _NoCredentials;
         public VendorTransactionStatusService VendorTransactionStatus => this._VendorTransactionStatus ?? throw _NoCredentials;        
         public MerchantShippingTemplateService MerchantShippingTemplate => this._MerchantShippingTemplate ?? throw _NoCredentials;
+        public ReplenishmentService Replenishment => this._Replenishment ?? throw _NoCredentials;
+        public ApplicationManagementService ApplicationManagement => this._ApplicationManagement ?? throw _NoCredentials;
 
 
         private AppIntegrationsServiceV20240401 _AppIntegrationsServiceV20240401 { get; set; }
         private OrderService _Orders { get; set; }
+        private OrderServiceV20260101 _OrdersV20260101 { get; set; }
         private ReportService _Reports { get; set; }
         private SolicitationService _Solicitations { get; set; }
         private FinancialService _Financials { get; set; }
@@ -94,6 +104,8 @@ namespace FikaAmazonAPI
         private VendorTransactionStatusService _VendorTransactionStatus { get; set; }
         private VendorDirectFulfillmentInventoryService _VendorDirectFulfillmentInventory { get; set; }
         private MerchantShippingTemplateService _MerchantShippingTemplate { get; set; }
+        private ReplenishmentService _Replenishment { get; set; }
+        private ApplicationManagementService _ApplicationManagement { get; set; }
 
         private UnauthorizedAccessException _NoCredentials = new UnauthorizedAccessException($"Error, you cannot make calls to Amazon without credentials!");
 
@@ -123,6 +135,7 @@ namespace FikaAmazonAPI
             this._Authorization = new AuthorizationService(this.Credentials, _loggerFactory);
             this._AppIntegrationsServiceV20240401 = new AppIntegrationsServiceV20240401(this.Credentials, _loggerFactory);
             this._Orders = new OrderService(this.Credentials, _loggerFactory);
+            this._OrdersV20260101 = new OrderServiceV20260101(this.Credentials, _loggerFactory);
             this._Reports = new ReportService(this.Credentials, _loggerFactory);
             this._Solicitations = new SolicitationService(this.Credentials, _loggerFactory);
             this._Financials = new FinancialService(this.Credentials, _loggerFactory);
@@ -160,6 +173,8 @@ namespace FikaAmazonAPI
             this._VendorTransactionStatus = new VendorTransactionStatusService(this.Credentials, _loggerFactory);
             this._VendorDirectFulfillmentInventory = new VendorDirectFulfillmentInventoryService(this.Credentials, _loggerFactory);
             this._MerchantShippingTemplate = new MerchantShippingTemplateService(this.Credentials, _loggerFactory);
+            this._Replenishment = new ReplenishmentService(this.Credentials, _loggerFactory);
+            this._ApplicationManagement = new ApplicationManagementService(this.Credentials, _loggerFactory);
 
             AmazonCredential.DebugMode = this.Credentials.IsDebugMode;
         }

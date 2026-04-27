@@ -51,13 +51,13 @@ Install-Package CSharpAmazonSpAPI
 - [x] [ProductPricingV0](https://developer-docs.amazon.com/sp-api/docs/product-pricing-api-v0-reference)
 - [x] [Sales](https://developer-docs.amazon.com/sp-api/docs/sales-api-v1-reference)
 - [x] [Sellers](https://developer-docs.amazon.com/sp-api/docs/sellers-api-v1-reference)
-- [ ] [Services](https://developer-docs.amazon.com/sp-api/docs/services-api-v1-reference)
+- [x] [Services](https://developer-docs.amazon.com/sp-api/docs/services-api-v1-reference) — `getServiceJobByServiceJobId`, `getServiceJobs`, `cancelServiceJobByServiceJobId`, `completeServiceJobByServiceJobId`
 - [x] [Solicitations](https://developer-docs.amazon.com/sp-api/docs/solicitations-api-v1-reference)
 - [x] [Token](https://developer-docs.amazon.com/sp-api/docs/tokens-api-v2021-03-01-reference)  [Use Case Guide](https://developer-docs.amazon.com/sp-api/docs/tokens-api-use-case-guide)
 - [x] [Authorization](https://developer-docs.amazon.com/sp-api/docs/authorization-api-v1-reference)
 - [x] [Easy Ship](https://developer-docs.amazon.com/sp-api/docs/easy-ship-api-v2022-03-23-reference)
-- [ ] [A+ Content](https://developer-docs.amazon.com/sp-api/docs/selling-partner-api-for-a-content-management)
-- [ ] [Replenishment](https://developer-docs.amazon.com/sp-api/docs/replenishment-api-v2022-11-07-reference)
+- [x] [A+ Content](https://developer-docs.amazon.com/sp-api/docs/selling-partner-api-for-a-content-management)
+- [x] [Replenishment](https://developer-docs.amazon.com/sp-api/docs/replenishment-api-v2022-11-07-reference) — `listOffers`, `listOfferMetrics`, `getSellingPartnerMetrics`
 
 
 #### Vendor 
@@ -95,7 +95,12 @@ For more information about keys, check the [Amazon developer documentation](http
 ---
 ## Usage
 
-> ### Please be aware there has been a change to the _Orders.GetOrderAddress()_ method please reference the new sample code for more details.
+> ### Heads-up: Amazon-side changes affecting this library
+>
+> - **Catalog Items API v0 was removed by Amazon on 2025-03-31.** `CatalogItem.ListCatalogItems`, `CatalogItem.ListCatalogCategories`, and `CatalogItem.GetCatalogItemJson` are now marked obsolete because the underlying endpoints no longer exist. Use the 2022-04-01 methods (`SearchCatalogItems202204`, `GetCatalogItem202204`) instead.
+> - **XML feed types (e.g. the legacy inventory feed) were turned off on 2025-07-31.** If you previously submitted inventory updates with `_POST_INVENTORY_AVAILABILITY_DATA_` or similar XML feed types, migrate to `FeedType.JSON_LISTINGS_FEED` with a JSON-Patch payload (see `FeedsSample.cs`).
+> - **Orders API v0 will be removed on 2027-03-27.** All six v0 operations (`getOrders`, `getOrder`, `getOrderBuyerInfo`, `getOrderAddress`, `getOrderItems`, `getOrderItemsBuyerInfo`) will start failing on that date. For new code, prefer `amazonConnection.OrdersV20260101` (Orders API v2026-01-01), which collapses those six operations into `getOrder` and `searchOrders`.
+> - **`Address.Name` (Orders v0) is now optional** as of Amazon's 2025-10 release. The constructor in `AmazonSpApiSDK.Models.Orders.Address` no longer throws when `name` is null — handle null `Name` defensively in your code.
 
 ### Configuration
 You can configure a connection as shown below. See [Here](https://github.com/abuzuhri/Amazon-SP-API-CSharp/blob/main/Source/FikaAmazonAPI.SampleCode/Program.cs) for the relevant code file.
@@ -124,19 +129,36 @@ AmazonConnection amazonConnection = new AmazonConnection(new AmazonCredential()
 
 ### Configuration using a proxy
 Please see [here](https://github.com/abuzuhri/Amazon-SP-API-CSharp/blob/main/Source/FikaAmazonAPI.SampleCode/Program.cs) for the relevant code file.
->```csharp
->AmazonConnection amazonConnection = new AmazonConnection(new AmazonCredential()
->{
->     ClientId = "amzn1.application-XXX-client.XXXXXXXXXXXXXXXXXXXXXXXXXXXX",
->     ClientSecret = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
->     RefreshToken= "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
->     MarketPlaceID = "A2VIGQ35RCS4UG",
->     ProxyAddress = "http(s)://xxx.xxx.xxx.xxx:xxxx",
->});
->```
->> * Assign your proxy address to the ProxyAddress Property and you'll be able to use a proxy account. 
->>
->> ***This is not required and will operate normally without the ProxyAddress being set.***
+
+The `Proxy` property accepts any `IWebProxy` implementation:
+```csharp
+AmazonConnection amazonConnection = new AmazonConnection(new AmazonCredential()
+{
+     ClientId = "amzn1.application-XXX-client.XXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+     ClientSecret = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+     RefreshToken= "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+     MarketPlaceID = "A2VIGQ35RCS4UG",
+     Proxy = new System.Net.WebProxy("http://xxx.xxx.xxx.xxx:xxxx"),
+});
+```
+
+For an authenticated proxy, assign any `IWebProxy` implementation -- for example, a `WebProxy` with credentials:
+```csharp
+AmazonConnection amazonConnection = new AmazonConnection(new AmazonCredential()
+{
+     ClientId = "amzn1.application-XXX-client.XXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+     ClientSecret = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+     RefreshToken= "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+     MarketPlaceID = "A2VIGQ35RCS4UG",
+     Proxy = new System.Net.WebProxy("http://xxx.xxx.xxx.xxx:xxxx")
+     {
+         Credentials = new System.Net.NetworkCredential("username", "password")
+     },
+});
+```
+> ***Proxy is not required and will operate normally without it being set.***
+
+---
 
 ### Order List
 For more order samples, please check [Here](https://github.com/abuzuhri/Amazon-SP-API-CSharp/blob/main/Source/FikaAmazonAPI.SampleCode/OrdersSample.cs).
@@ -275,6 +297,7 @@ var reimbursementsOrder = reportManager.GetReimbursementsOrder(180); //GET_FBA_R
 var feedbacks = reportManager.GetFeedbackFromDays(180); //GET_SELLER_FEEDBACK_DATA
 var LedgerDetails = reportManager.GetLedgerDetailAsync(10); //GET_LEDGER_DETAIL_VIEW_DATA
 var UnsuppressedInventory = reportManager.GetUnsuppressedInventoryDataAsync().ConfigureAwait(false).GetAwaiter().GetResult(); //GET_FBA_MYI_UNSUPPRESSED_INVENTORY_DATA
+var sellerPerformance = reportManager.GetSellerPerformance(); //GET_V2_SELLER_PERFORMANCE_REPORT
 ```
 
 
@@ -372,6 +395,33 @@ var data = amazonConnection.ProductPricing.GetCompetitivePricing(
  await priceDemo.GetFeaturedOfferExpectedPriceBatch();
 ```
 
+### GetCompetitiveSummary (v2022-05-01)
+The 2022-05-01 batch operation returns featured buying options, reference prices, lowest priced offers, and **similar items** (the `similarItems` array Amazon added in April 2026) for up to 20 ASIN/marketplace pairs per call. Rate limit is strict — 0.033 req/s, burst 1.
+
+```CSharp
+var response = await amazonConnection.ProductPricing.GetCompetitiveSummaryAsync(new CompetitiveSummaryBatchRequest
+{
+    Requests = new List<CompetitiveSummaryRequest>
+    {
+        new CompetitiveSummaryRequest
+        {
+            Asin          = "B00CZC5F0G",
+            MarketplaceId = MarketPlace.UnitedArabEmirates.ID,
+            IncludedData  = new List<CompetitiveSummaryIncludedData>
+            {
+                CompetitiveSummaryIncludedData.similarItems
+            },
+        }
+    }
+});
+
+// Read the new similarItems array.
+foreach (var r in response.Responses)
+    foreach (var group in r.Body?.SimilarItems ?? new List<SimilarItems>())
+        foreach (var item in group.Items)
+            Console.WriteLine($"Similar ASIN: {item.Asin}");
+```
+
 
 ### Notifications — Create Destination
 For more notification samples, please check [Here](https://github.com/abuzuhri/Amazon-SP-API-CSharp/blob/main/Source/FikaAmazonAPI.SampleCode/NotificationsSample.cs).
@@ -414,7 +464,32 @@ var result = amazonConnection.Notification.CreateSubscription(
     });
 ```
 
+> **One subscription per `NotificationType`.** Amazon doesn't let a single subscription cover multiple notification types — call `CreateSubscription` once per type. You **can** reuse the same `destinationId` (the same SQS queue) across all of them. To handle LWA secret rotation, add two extra calls pointing at the same destination:
+>
+> ```CSharp
+> // Receive the new secret on rotation.
+> amazonConnection.Notification.CreateSubscription(new ParameterCreateSubscription
+> {
+>     notificationType = NotificationType.APPLICATION_OAUTH_CLIENT_NEW_SECRET,
+>     destinationId    = "xxxxxxxxxxxxxxx",   // same destination as your other subscriptions
+>     payloadVersion   = "1.0",
+> });
+>
+> // Get advance warning before the current secret expires.
+> amazonConnection.Notification.CreateSubscription(new ParameterCreateSubscription
+> {
+>     notificationType = NotificationType.APPLICATION_OAUTH_CLIENT_SECRET_EXPIRY,
+>     destinationId    = "xxxxxxxxxxxxxxx",
+>     payloadVersion   = "1.0",
+> });
+> ```
+>
+> See [Application Management — rotate the LWA client secret](#application-management-v2023-11-30--rotate-the-lwa-client-secret) for the full rotation flow.
+
 ### Notifications — Read Messages
+
+> **Tip:** if your subscriptions include `APPLICATION_OAUTH_CLIENT_NEW_SECRET`, wrap your `IMessageReceiver` with [`RotationApplyingMessageReceiver`](#application-management-v2023-11-30--rotate-the-lwa-client-secret) so a rotated client secret is applied to `amazonConnection.Credentials.ClientSecret` automatically before your receiver sees the message.
+
 ```CSharp
 
 var SQS_URL = Environment.GetEnvironmentVariable("SQS_URL");
@@ -484,6 +559,9 @@ public class CustomMessageReceiver : IMessageReceiver
 
 ### Notifications — End-to-End SQS Setup
 Complete workflow following the [Amazon SQS notification setup guide](https://developer-docs.amazon.com/sp-api/docs/set-up-notifications-with-amazon-sqs). Before running this code, grant SP-API permission to write to your SQS queue in the AWS Console.
+
+> If you also subscribe to `APPLICATION_OAUTH_CLIENT_NEW_SECRET` here, see [Notifications — Read Messages](#notifications--read-messages) for the `RotationApplyingMessageReceiver` wrapper that auto-applies rotated secrets.
+
 ```CSharp
 
 // Step 3: Create a destination (grantless operation — no seller authorization needed)
@@ -967,6 +1045,178 @@ var def = amazonConnection.ProductType.GetDefinitionsProductType(
      parameters.firstDayOfWeek = Constants.FirstDayOfWeek.monday;
 
      var sales = amazonConnection.Sales.GetOrderMetrics(parameters);
+```
+
+### Services — Get a service job by ID
+For more samples, see [`ServicesSample.cs`](https://github.com/abuzuhri/Amazon-SP-API-CSharp/blob/main/Source/FikaAmazonAPI.SampleCode/ServicesSample.cs).
+```CSharp
+var serviceJob = amazonConnection.Services.GetServiceJobByServiceJobId("SJ-1234567890");
+
+// As of Amazon's April 2026 release, the response contains a payments[] array.
+var totalPaid = serviceJob.Payments?
+    .Where(p => p.Amount?.Value != null)
+    .Sum(p => p.Amount.Value);
+```
+
+### A+ Content (v2020-11-01)
+For more samples, see [`AplusContentSample.cs`](https://github.com/abuzuhri/coderzanjeer/Amazon-SP-API-CSharp/blob/main/Source/FikaAmazonAPI.SampleCode/AplusContentSample.cs). All ten operations share a 10 req/s, burst 10 rate limit; list/search ops auto-page internally.
+
+```CSharp
+// 1. List all A+ docs on the account.
+var docs = await amazonConnection.AplusContent.SearchContentDocumentsAsync();
+
+// 2. Fetch one with full content + metadata.
+var doc = await amazonConnection.AplusContent.GetContentDocumentAsync(
+    contentReferenceKey: docs.First().ContentReferenceKey,
+    includedDataSet:     new List<AplusIncludedDataType> { AplusIncludedDataType.CONTENTS, AplusIncludedDataType.METADATA });
+
+// 3. Create a minimal doc with one STANDARD_TEXT module.
+var created = await amazonConnection.AplusContent.CreateContentDocumentAsync(new PostContentDocumentRequest
+{
+    ContentDocument = new ContentDocument
+    {
+        Name        = "My new A+ doc",
+        ContentType = ContentType.EBC,
+        Locale      = "en-US",
+        ContentModuleList = new List<ContentModule>
+        {
+            new ContentModule
+            {
+                ContentModuleType = ContentModuleType.STANDARD_TEXT,
+                StandardText = new StandardTextModule
+                {
+                    Headline = new TextComponent { Value = "About this product" },
+                    Body     = new ParagraphComponent
+                    {
+                        TextList = new List<TextComponent>
+                        {
+                            new TextComponent { Value = "Replace with your product story." }
+                        }
+                    }
+                }
+            }
+        }
+    }
+});
+
+// 4. Link ASINs and submit for approval.
+await amazonConnection.AplusContent.PostContentDocumentAsinRelationsAsync(
+    created.ContentReferenceKey,
+    new PostContentDocumentAsinRelationsRequest { AsinSet = new List<string> { "B00CZC5F0G" } });
+await amazonConnection.AplusContent.PostContentDocumentApprovalSubmissionAsync(created.ContentReferenceKey);
+```
+
+### Application Management (v2023-11-30) — rotate the LWA client secret
+[`ApplicationManagementSample.cs`](https://github.com/abuzuhri/Amazon-SP-API-CSharp/blob/main/Source/FikaAmazonAPI.SampleCode/ApplicationManagementSample.cs) shows the full flow.
+
+The HTTP response carries no useful body — the rotated secret is delivered **asynchronously to a developer-registered SQS queue** subscribed to the `APPLICATION_OAUTH_CLIENT_NEW_SECRET` notification. The pattern is:
+
+```CSharp
+// 1. One-time setup: subscribe to the rotation notifications.
+amazonConnection.Notification.CreateSubscription(new ParameterCreateSubscription
+{
+    notificationType = NotificationType.APPLICATION_OAUTH_CLIENT_NEW_SECRET,
+    destinationId    = yourSqsDestinationId,   // pre-existing destination on an SQS queue
+    payloadVersion   = "1.0",
+});
+
+// 2. Trigger rotation. Uses LWA grant_type=client_credentials with the rotation scope —
+//    the SDK handles that special auth path internally.
+amazonConnection.ApplicationManagement.RotateApplicationClientSecret();
+
+// 3. Poll your SQS queue. The SDK already deserializes the payload into
+//    NotificationMessageResponce.Payload.ApplicationOAuthClientNewSecret
+//    (an ApplicationOAuthClientNewSecretNotification with NewClientSecret +
+//    NewClientSecretExpiryTime + OldClientSecretExpiryTime).
+```
+
+#### Auto-applying the rotated secret
+If you already use `NotificationService.StartReceivingNotificationMessages*` for SQS, wrap your existing receiver in `RotationApplyingMessageReceiver` to apply rotated secrets automatically — your code keeps doing what it did before, the credential bag updates transparently, and your `onRotated` callback persists the rotated values to your database so the next process start picks them up.
+
+Persist **all four** fields:
+
+| Field | What to do with it |
+|---|---|
+| `payload.ClientId` | Row key. |
+| `payload.NewClientSecret` | Store **encrypted** (Key Vault / KMS / encrypted column). |
+| `payload.NewClientSecretExpiryTime` | When this new secret itself expires — schedule the next rotation before this. |
+| `payload.OldClientSecretExpiryTime` | Deadline to finish the cutover. Until this passes, both secrets work; after, only the new one does. |
+
+```CSharp
+var wrapped = new RotationApplyingMessageReceiver(
+    inner: myReceiver,
+    credentials: amazonConnection.Credentials,
+    onRotated: payload =>
+    {
+        // TODO: save these four values to your database, with NewClientSecret encrypted at rest.
+        // The SDK has already applied payload.NewClientSecret to amazonConnection.Credentials,
+        // so a transient DB error here doesn't break the running process — log and continue.
+        myDb.SaveRotatedSecret(
+            clientId:                 payload.ClientId,
+            newClientSecret:          payload.NewClientSecret,
+            newClientSecretExpiresAt: payload.NewClientSecretExpiryTime,
+            oldClientSecretExpiresAt: payload.OldClientSecretExpiryTime);
+    });
+
+NotificationService.StartReceivingNotificationMessages(param, wrapped);
+```
+
+A reference `IClientSecretStore` interface is in [`ApplicationManagementSample.cs`](https://github.com/abuzuhri/Amazon-SP-API-CSharp/blob/main/Source/FikaAmazonAPI.SampleCode/ApplicationManagementSample.cs).
+
+To get advance warning before a secret expires, also subscribe to `NotificationType.APPLICATION_OAUTH_CLIENT_SECRET_EXPIRY` — its payload is `ApplicationOAuthClientSecretExpiryNotification` with a `ClientSecretExpiryTime`.
+
+### Replenishment (v2022-11-07) — Subscribe & Save
+For more samples, see [`ReplenishmentSample.cs`](https://github.com/abuzuhri/Amazon-SP-API-CSharp/blob/main/Source/FikaAmazonAPI.SampleCode/ReplenishmentSample.cs). All three operations are rate-limited to 1 req/s, burst 1.
+
+```CSharp
+// 1. Find offers with paused or at-risk deliveries, sorted by inventory ascending.
+var atRisk = await amazonConnection.Replenishment.ListOffersAsync(new ListOffersRequest
+{
+    Pagination = new ListOffersRequestPagination { Limit = 100 },
+    Filters = new ListOffersRequestFilters
+    {
+        MarketplaceId = MarketPlace.US.ID,
+        ProgramTypes  = new List<ProgramType> { ProgramType.SUBSCRIBE_AND_SAVE },
+        DeliveriesConditions = new List<DeliveryConditionType>
+        {
+            DeliveryConditionType.NEXT_30_DAYS_DELIVERIES_PAUSED_PRICING,
+            DeliveryConditionType.NEXT_30_DAYS_DELIVERIES_AT_LOW_INVENTORY_RISK,
+        },
+    },
+    Sort = new ListOffersRequestSort { Order = SortOrder.ASC, Key = ListOffersSortKey.INVENTORY },
+});
+
+// 2. Per-offer metrics — now offer-level (SKU + FulfillmentChannelType) per April 2026 release.
+var perOffer = await amazonConnection.Replenishment.ListOfferMetricsAsync(new ListOfferMetricsRequest { /*...*/ });
+
+// 3. Seller-level metrics including the new REVENUE_PENETRATION metric.
+var spMetrics = await amazonConnection.Replenishment.GetSellingPartnerMetricsAsync(new GetSellingPartnerMetricsRequest
+{
+    AggregationFrequency = AggregationFrequency.MONTH,
+    TimeInterval = new TimeInterval { StartDate = monthStart, EndDate = monthEnd },
+    TimePeriodType = TimePeriodType.PERFORMANCE,
+    MarketplaceId = MarketPlace.US.ID,
+    ProgramTypes  = new List<ProgramType> { ProgramType.SUBSCRIBE_AND_SAVE },
+    Metrics = new List<Metric> { Metric.REVENUE_PENETRATION, Metric.TOTAL_SUBSCRIPTIONS_REVENUE },
+});
+```
+
+### Services — List, cancel, and complete service jobs
+```CSharp
+// Auto-pages through every result page and returns a flat list.
+var upcoming = amazonConnection.Services.GetServiceJobs(new ParameterGetServiceJobs
+{
+    scheduleStartDate = DateTime.UtcNow,
+    scheduleEndDate   = DateTime.UtcNow.AddDays(14),
+    serviceJobStatus  = new List<string> { "SCHEDULED", "PENDING_SCHEDULE" },
+    pageSize          = 50,
+    sortField         = "JOB_DATE",
+    sortOrder         = "ASC",
+});
+
+// Returns true when the request succeeds with no errors in the response body.
+amazonConnection.Services.CancelServiceJobByServiceJobId("SJ-1234567890", "BUYER_REQUESTED_CANCELLATION");
+amazonConnection.Services.CompleteServiceJobByServiceJobId("SJ-1234567890");
 ```
 ---
 ## Q & A

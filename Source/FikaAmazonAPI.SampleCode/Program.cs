@@ -25,8 +25,17 @@ namespace FikaAmazonAPI.SampleCode
                 RefreshToken = config.GetSection("FikaAmazonAPI:RefreshToken").Value,
                 MarketPlaceID = config.GetSection("FikaAmazonAPI:MarketPlaceID").Value,
                 SellerID = config.GetSection("FikaAmazonAPI:SellerId").Value,
-                IsDebugMode = true
+                IsDebugMode = true,
             });
+
+
+
+            ReplenishmentSample replenishmentSample = new ReplenishmentSample(amazonConnection);
+            var listAtRiskOffers = await replenishmentSample.ListAtRiskOffersAsync();
+
+
+            ProductPricingSample productPricingSample = new ProductPricingSample(amazonConnection);
+            var ASINs = await productPricingSample.GetCompetitiveSummaryFullAsync("B001F0R64M");
 
             ReportManager reportManager = new ReportManager(amazonConnection);
 
