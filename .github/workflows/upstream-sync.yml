@@ -41,7 +41,55 @@ jobs:
         run: |
           BRANCH_NAME="sync/upstream-$(date +%Y-%m-%d)"
           git checkout -B "$BRANCH_NAME" origin/main
-          git merge upstream/main --no-edit
+          if ! git merge upstream/main --no-edit; then
+            PROJECT_FILE="Source/FikaAmazonAPI/FikaAmazonAPI.csproj"
+
+            if git diff --name-only --diff-filter=U | grep -qx "$PROJECT_FILE"; then
+              python3 <<'PY'
+          import re
+          import subprocess
+          from pathlib import Path
+
+          project_file = "Source/FikaAmazonAPI/FikaAmazonAPI.csproj"
+          upstream = subprocess.check_output(
+              ["git", "show", f":3:{project_file}"],
+              text=True,
+          )
+
+          version_lines = [
+              line for line in upstream.splitlines()
+              if re.match(r"\s*<(Version|VersionPrefix|AssemblyVersion|FileVersion)>", line)
+          ]
+
+          if not version_lines:
+              raise SystemExit("Could not find upstream version properties.")
+
+          path = Path(project_file)
+          content = path.read_text()
+          content, replacements = re.subn(
+              r"(?ms)^<<<<<<< .+?\n.*?^=======\n.*?^>>>>>>> .+?\n",
+              "\n".join(version_lines) + "\n",
+              content,
+              count=1,
+          )
+
+          if replacements != 1:
+              raise SystemExit("Could not resolve project version conflict.")
+
+          path.write_text(content)
+          PY
+              git add "$PROJECT_FILE"
+            fi
+
+            REMAINING_CONFLICTS=$(git diff --name-only --diff-filter=U)
+            if [ -n "$REMAINING_CONFLICTS" ]; then
+              echo "Unresolved merge conflicts remain:"
+              echo "$REMAINING_CONFLICTS"
+              exit 1
+            fi
+
+            git commit --no-edit
+          fi
           echo "BRANCH_NAME=$BRANCH_NAME" >> "$GITHUB_ENV"
           if git diff --quiet origin/main...HEAD; then
             echo "HAS_CHANGES=false" >> "$GITHUB_ENV"
