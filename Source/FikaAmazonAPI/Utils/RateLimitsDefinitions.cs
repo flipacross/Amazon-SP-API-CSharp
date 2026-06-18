@@ -235,6 +235,7 @@ namespace FikaAmazonAPI.Utils
               { RateLimitType.Sales_GetOrderMetrics,                          new RateLimits(0.5M, 15) },
 
               { RateLimitType.Sellers_GetMarketplaceParticipations,           new RateLimits(0.016M, 15) },
+              { RateLimitType.Sellers_GetAccount,                             new RateLimits(0.016M, 15) },
 
               { RateLimitType.Solicitations_GetSolicitationActionsForOrder,                   new RateLimits(1.0M, 5) },
               { RateLimitType.Solicitations_CreateProductReviewAndSellerFeedbackSolicitation, new RateLimits(1.0M, 5) },

@@ -27,5 +27,17 @@ namespace FikaAmazonAPI.Services
                 return response.Payload;
             return null;
         }
+
+        public Account GetAccount() =>
+                Task.Run(() => GetAccountAsync()).ConfigureAwait(false).GetAwaiter().GetResult();
+
+        public async Task<Account> GetAccountAsync(CancellationToken cancellationToken = default)
+        {
+            await CreateAuthorizedRequestAsync(SellersApiUrls.GetAccount, RestSharp.Method.Get, cancellationToken: cancellationToken);
+            var response = await ExecuteRequestAsync<GetAccountResponse>(RateLimitType.Sellers_GetAccount, cancellationToken);
+            if (response != null && response.Payload != null)
+                return response.Payload;
+            return null;
+        }
     }
 }

@@ -47,6 +47,9 @@ namespace FikaAmazonAPI.SampleCode
 
             var aa=amazonConnection.Seller.GetMarketplaceParticipations();
 
+            // getAccount: business/tax/contact profile + selling plan + marketplace participations.
+            var account = amazonConnection.Seller.GetAccount();
+
             var plan = amazonConnection.FulFillmentInboundv20240320.ListInboundPlans(new Parameter.FulFillmentInbound.v20240320.ParameterListInboundPlans
             {
                 Status = AmazonSpApiSDK.Models.FulfillmentInboundv20240320.InboundPlanStatus.ACTIVE

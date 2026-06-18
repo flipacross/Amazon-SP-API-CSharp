@@ -219,6 +219,7 @@
         EasyShip_UpdateScheduledPackages,
 
         Sellers_GetMarketplaceParticipations,
+        Sellers_GetAccount,
 
         Solicitations_GetSolicitationActionsForOrder,
         Solicitations_CreateProductReviewAndSellerFeedbackSolicitation,

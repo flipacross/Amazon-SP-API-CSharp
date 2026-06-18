@@ -364,6 +364,10 @@ namespace FikaAmazonAPI.AmazonSpApiSDK.Services
             {
                 get => $"{_resourceBaseUrl}/marketplaceParticipations";
             }
+            public static string GetAccount
+            {
+                get => $"{_resourceBaseUrl}/account";
+            }
         }
         internal class ProductPricingApiUrls
         {
