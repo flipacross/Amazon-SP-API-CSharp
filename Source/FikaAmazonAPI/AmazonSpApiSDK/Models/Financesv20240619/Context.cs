@@ -41,7 +41,8 @@ namespace FikaAmazonAPI.AmazonSpApiSDK.Models.Finances.Model
         /// <param name="maturityDate">The release date of the transaction..</param>
         /// <param name="startTime">Start time of the transaction..</param>
         /// <param name="endTime">End time of the transaction..</param>
-        public Context(string storeName = default(string), string orderType = default(string), string channel = default(string), string asin = default(string), string sku = default(string), int? quantityShipped = default(int?), string fulfillmentNetwork = default(string), string paymentType = default(string), string paymentMethod = default(string), string paymentReference = default(string), DateTime? paymentDate = default(DateTime?), string deferralReason = default(string), DateTime? maturityDate = default(DateTime?), DateTime? startTime = default(DateTime?), DateTime? endTime = default(DateTime?))
+        /// <param name="contextType">The type of context..</param>
+        public Context(string storeName = default(string), string orderType = default(string), string channel = default(string), string asin = default(string), string sku = default(string), int? quantityShipped = default(int?), string fulfillmentNetwork = default(string), string paymentType = default(string), string paymentMethod = default(string), string paymentReference = default(string), DateTime? paymentDate = default(DateTime?), string deferralReason = default(string), DateTime? maturityDate = default(DateTime?), DateTime? startTime = default(DateTime?), DateTime? endTime = default(DateTime?), string contextType = default(string))
         {
             this.StoreName = storeName;
             this.OrderType = orderType;
@@ -58,6 +59,7 @@ namespace FikaAmazonAPI.AmazonSpApiSDK.Models.Finances.Model
             this.MaturityDate = maturityDate;
             this.StartTime = startTime;
             this.EndTime = endTime;
+            this.ContextType = contextType;
         }
         
         /// <summary>
@@ -166,6 +168,13 @@ namespace FikaAmazonAPI.AmazonSpApiSDK.Models.Finances.Model
         public DateTime? EndTime { get; set; }
 
         /// <summary>
+        /// The type of context. Examples: ProductContext, AmazonPayContext, PaymentsContext, DeferredContext, BusinessContext, TimeRangeContext.
+        /// </summary>
+        /// <value>The type of context.</value>
+        [DataMember(Name="contextType", EmitDefaultValue=false)]
+        public string ContextType { get; set; }
+
+        /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
@@ -188,6 +197,7 @@ namespace FikaAmazonAPI.AmazonSpApiSDK.Models.Finances.Model
             sb.Append("  MaturityDate: ").Append(MaturityDate).Append("\n");
             sb.Append("  StartTime: ").Append(StartTime).Append("\n");
             sb.Append("  EndTime: ").Append(EndTime).Append("\n");
+            sb.Append("  ContextType: ").Append(ContextType).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -296,6 +306,11 @@ namespace FikaAmazonAPI.AmazonSpApiSDK.Models.Finances.Model
                     this.EndTime == input.EndTime ||
                     (this.EndTime != null &&
                     this.EndTime.Equals(input.EndTime))
+                ) &&
+                (
+                    this.ContextType == input.ContextType ||
+                    (this.ContextType != null &&
+                    this.ContextType.Equals(input.ContextType))
                 );
         }
 
@@ -338,6 +353,8 @@ namespace FikaAmazonAPI.AmazonSpApiSDK.Models.Finances.Model
                     hashCode = hashCode * 59 + this.StartTime.GetHashCode();
                 if (this.EndTime != null)
                     hashCode = hashCode * 59 + this.EndTime.GetHashCode();
+                if (this.ContextType != null)
+                    hashCode = hashCode * 59 + this.ContextType.GetHashCode();
                 return hashCode;
             }
         }

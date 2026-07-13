@@ -69,5 +69,37 @@ namespace FikaAmazonAPI.SampleCode
                     relatedIdentifierValue = financialEventGroupId,
                 });
         }
+
+        public IList<Transaction> ListFinancialTransactions20240619_ByOrderId(string amazonOrderId)
+        {
+            // postedAfter intentionally omitted: with a related identifier filter the date window
+            // is not required (the 180-day postedAfter/postedBefore rule would otherwise apply).
+            return amazonConnection.Financial.ListFinancialTransactions20240619(
+                new Parameter.Finance.ParameterListFinancialTransactions20240619()
+                {
+                    relatedIdentifierName = RelatedIdentifier.RelatedIdentifierNameEnum.ORDERID,
+                    relatedIdentifierValue = amazonOrderId,
+                });
+        }
+
+        public List<Transaction> ListFinancialTransactions20240619_PageByPage(string marketplaceId)
+        {
+            var all = new List<Transaction>();
+            var parameter = new Parameter.Finance.ParameterListFinancialTransactions20240619()
+            {
+                postedAfter = DateTime.UtcNow.AddDays(-7),
+                marketplaceId = marketplaceId,
+            };
+            string? nextToken = null;
+            do
+            {
+                parameter.nextToken = nextToken;
+                var response = amazonConnection.Financial.GetFinancialTransactions20240619ByNextToken(parameter);
+                if (response?.Payload?.Transactions != null)
+                    all.AddRange(response.Payload.Transactions);
+                nextToken = response?.Payload?.NextToken;
+            } while (!string.IsNullOrEmpty(nextToken));
+            return all;
+        }
     }
 }

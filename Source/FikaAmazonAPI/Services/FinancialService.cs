@@ -178,13 +178,23 @@ namespace FikaAmazonAPI.Services
                 countPages++;
             }
 
+            // Surface continuation state on the parameter: null when all pages were consumed
+            // (safe re-use for a fresh query), or the next unconsumed token when
+            // MaxNumberOfPages stopped the loop early (re-call with the same parameter to resume).
+            parameterListFinancialTransactions.nextToken = string.IsNullOrEmpty(nextToken) ? null : nextToken;
+
             return list;
         }
 
-        private ListTransactionsResponse GetFinancialTransactions20240619ByNextToken(ParameterListFinancialTransactions20240619 parameterListFinancialTransactions) =>
+        /// <summary>
+        /// Fetches a single page of transactions. Set <c>parameter.nextToken</c> (keeping the same
+        /// arguments that produced the token) to continue; the response carries
+        /// <c>Payload.NextToken</c> for the next page.
+        /// </summary>
+        public ListTransactionsResponse GetFinancialTransactions20240619ByNextToken(ParameterListFinancialTransactions20240619 parameterListFinancialTransactions) =>
             Task.Run(() => GetFinancialTransactions20240619ByNextTokenAsync(parameterListFinancialTransactions)).ConfigureAwait(false).GetAwaiter().GetResult();
 
-        private async Task<ListTransactionsResponse> GetFinancialTransactions20240619ByNextTokenAsync(ParameterListFinancialTransactions20240619 parameterListFinancialTransactions, CancellationToken cancellationToken = default)
+        public async Task<ListTransactionsResponse> GetFinancialTransactions20240619ByNextTokenAsync(ParameterListFinancialTransactions20240619 parameterListFinancialTransactions, CancellationToken cancellationToken = default)
         {
             var parameter = parameterListFinancialTransactions.getParameters();
 

@@ -8,7 +8,13 @@ namespace FikaAmazonAPI.Parameter.Finance
 {
     public class ParameterListFinancialTransactions20240619 : ParameterBased
     {
-        public DateTime postedAfter { get; set; }
+        /// <summary>
+        /// The response includes financial events posted on or after this date (ISO 8601).
+        /// Required if you do not specify relatedIdentifierName/relatedIdentifierValue;
+        /// leave null for identifier-only lookups (e.g. ORDER_ID). If postedAfter and
+        /// postedBefore are more than 180 days apart, the response is empty.
+        /// </summary>
+        public DateTime? postedAfter { get; set; }
         public DateTime? postedBefore { get; set; }
         public string? marketplaceId { get; set; }
         /// <summary>
@@ -19,8 +25,8 @@ namespace FikaAmazonAPI.Parameter.Finance
         /// </summary>
         public string? transactionStatus { get; set; }
         /// <summary>
-        /// The identifier name to filter by. Only FINANCIAL_EVENT_GROUP_ID has filtering capability at the moment;
-        /// other values appear in response payloads but cannot be used as query filters.
+        /// The identifier name to filter by. FINANCIAL_EVENT_GROUP_ID and ORDER_ID have filtering
+        /// capability; other values appear in response payloads but cannot be used as query filters.
         /// </summary>
         public RelatedIdentifierNameEnum? relatedIdentifierName { get; set; }
         public string? relatedIdentifierValue { get; set; }
