@@ -246,6 +246,17 @@
         
         VendorDirectFulfillmentInventory_SubmitInventoryUpdate,
 
+        ExternalFulfillmentShipment_GetShipments,
+        ExternalFulfillmentShipment_GetShipment,
+        ExternalFulfillmentShipment_ProcessShipment,
+        ExternalFulfillmentShipment_CreatePackages,
+        ExternalFulfillmentShipment_UpdatePackage,
+        ExternalFulfillmentShipment_RetrieveShippingOptions,
+        ExternalFulfillmentShipment_GenerateShipLabels,
+        ExternalFulfillmentShipment_GenerateInvoice,
+        ExternalFulfillmentShipment_RetrieveInvoice,
+        ExternalFulfillmentShipment_UpdatePackageStatus,
+
         Service_GetServiceJobByServiceJobId,
         Service_GetServiceJobs,
         Service_CancelServiceJobByServiceJobId,

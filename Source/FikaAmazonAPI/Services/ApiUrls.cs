@@ -440,7 +440,20 @@ namespace FikaAmazonAPI.AmazonSpApiSDK.Services
                 return $"{_resourceBaseUrl}/warehouses/{warehouseId}/items";
             }
         }
-        
+
+        protected class ExternalFulfillmentShipmentApiUrls
+        {
+            private static readonly string _resourceBaseUrl = "/externalFulfillment/2024-09-11";
+
+            public static string Shipments => $"{_resourceBaseUrl}/shipments";
+            public static string Shipment(string shipmentId) => $"{_resourceBaseUrl}/shipments/{shipmentId}";
+            public static string Packages(string shipmentId) => $"{Shipment(shipmentId)}/packages";
+            public static string Package(string shipmentId, string packageId) => $"{Packages(shipmentId)}/{packageId}";
+            public static string ShippingOptions(string shipmentId) => $"{Shipment(shipmentId)}/shippingOptions";
+            public static string Invoice(string shipmentId) => $"{Shipment(shipmentId)}/invoice";
+            public static string ShipLabels(string shipmentId) => $"{Shipment(shipmentId)}/shipLabels";
+        }
+
         protected class VendorDirectFulfillmentOrdersApiUrls
         {
             private readonly static string _resourceBaseUrl = "/vendor/directFulfillment/orders/v1";
