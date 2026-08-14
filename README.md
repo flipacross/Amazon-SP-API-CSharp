@@ -58,6 +58,7 @@ Install-Package CSharpAmazonSpAPI
 - [x] [Easy Ship](https://developer-docs.amazon.com/sp-api/docs/easy-ship-api-v2022-03-23-reference)
 - [x] [A+ Content](https://developer-docs.amazon.com/sp-api/docs/selling-partner-api-for-a-content-management)
 - [x] [Replenishment](https://developer-docs.amazon.com/sp-api/docs/replenishment-api-v2022-11-07-reference) — `listOffers`, `listOfferMetrics`, `getSellingPartnerMetrics`
+- [x] [External Fulfillment Shipments](https://developer-docs.amazon.com/sp-api/reference/externalfulfillmentshipments-api-v2024-09-11) — `getShipments`, `getShipment`, `processShipment`, `createPackages`, `updatePackage`, `retrieveShippingOptions`, `generateShipLabels`, `generateInvoice`, `retrieveInvoice`, `updatePackageStatus`
 
 
 #### Vendor 
@@ -1217,6 +1218,66 @@ var upcoming = amazonConnection.Services.GetServiceJobs(new ParameterGetServiceJ
 // Returns true when the request succeeds with no errors in the response body.
 amazonConnection.Services.CancelServiceJobByServiceJobId("SJ-1234567890", "BUYER_REQUESTED_CANCELLATION");
 amazonConnection.Services.CompleteServiceJobByServiceJobId("SJ-1234567890");
+```
+
+### External Fulfillment Shipments (v2024-09-11)
+For more samples, please check [Here](https://github.com/abuzuhri/Amazon-SP-API-CSharp/blob/main/Source/FikaAmazonAPI.SampleCode/ExternalFulfillmentShipmentSample.cs).
+```CSharp
+// 1. List shipments — auto-pages through every result page and returns a flat list.
+//    Status is required. Set MaxNumberOfPages to stop after a given number of pages.
+var shipments = amazonConnection.ExternalFulfillmentShipment.GetShipments(new ParameterGetShipments
+{
+    Status           = Shipment.StatusEnum.CONFIRMED,
+    LocationId       = "LOCATION_ID",
+    MaxResults       = 50,
+    LastUpdatedAfter = DateTime.UtcNow.AddDays(-7),
+});
+
+// 2. Retrieve a single shipment.
+var shipment = amazonConnection.ExternalFulfillmentShipment.GetShipment("SHIPMENT_ID");
+
+// 3. Confirm (or REJECT) a shipment.
+amazonConnection.ExternalFulfillmentShipment.ProcessShipment("SHIPMENT_ID", ProcessShipmentOperation.CONFIRM,
+    new ShipmentAcknowledgementRequest
+    {
+        ReferenceId = "REFERENCE_ID",
+        LineItems = new List<LineItemWithReason>
+        {
+            new()
+            {
+                LineItem = new LineItem { Id = "LINE_ITEM_ID", Quantity = 1 },
+                Reason   = LineItemWithReason.ReasonEnum.CUSTOMERREQUESTED,
+            },
+        },
+    });
+
+// 4. Create packages for the shipment.
+amazonConnection.ExternalFulfillmentShipment.CreatePackages("SHIPMENT_ID", new Packages
+{
+    _Packages = new List<Package>
+    {
+        new()
+        {
+            Id     = "PACKAGE_ID",
+            Weight = new Weight { Value = "200.0", WeightUnit = Weight.WeightUnitEnum.G },
+            Status = Package.StatusEnum.CREATED,
+        },
+    },
+});
+
+// 5. Retrieve shipping options, then generate (or REGENERATE) ship labels.
+var options = amazonConnection.ExternalFulfillmentShipment.RetrieveShippingOptions("SHIPMENT_ID", "PACKAGE_ID");
+var labels  = amazonConnection.ExternalFulfillmentShipment.GenerateShipLabels("SHIPMENT_ID",
+    GenerateShipLabelsOperation.GENERATE, new ShipLabelsInput { PackageIds = new List<string> { "PACKAGE_ID" } },
+    "SHIPPING_OPTION_ID");
+
+// 6. Generate and retrieve the invoice.
+amazonConnection.ExternalFulfillmentShipment.GenerateInvoice("SHIPMENT_ID");
+var invoice = amazonConnection.ExternalFulfillmentShipment.RetrieveInvoice("SHIPMENT_ID");
+
+// 7. Mark a package as shipped (the API only accepts the SHIPPED status here).
+amazonConnection.ExternalFulfillmentShipment.UpdatePackageStatusShipped("SHIPMENT_ID", "PACKAGE_ID",
+    new PackageDeliveryStatus { Status = PackageStatus.SHIPPED });
 ```
 ---
 ## Q & A

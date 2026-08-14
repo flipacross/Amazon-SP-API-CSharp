@@ -49,7 +49,7 @@ public class ExternalFulfillmentShipmentSample
 
     public void GetShipment()
     {
-        var shipment = amazonConnection.ExternalFulfillmentShipment.GetShipment("SHIPMENT_ID", "SHIP");
+        var shipment = amazonConnection.ExternalFulfillmentShipment.GetShipment("SHIPMENT_ID");
     }
 
     public void ProcessShipment()
@@ -66,7 +66,7 @@ public class ExternalFulfillmentShipmentSample
                 }
             }
         };
-        amazonConnection.ExternalFulfillmentShipment.ProcessShipment("SHIPMENT_ID", "CONFIRM", body);
+        amazonConnection.ExternalFulfillmentShipment.ProcessShipment("SHIPMENT_ID", ProcessShipmentOperation.CONFIRM, body);
     }
 
     public void CreatePackages()
@@ -132,7 +132,7 @@ public class ExternalFulfillmentShipmentSample
         {
             PackageIds = new List<string> { "PACKAGE_ID" }
         };
-        var labels = amazonConnection.ExternalFulfillmentShipment.GenerateShipLabels("SHIPMENT_ID", "PLACE_SHIPPING_ORDER", body, "SHIPPING_OPTION_ID");
+        var labels = amazonConnection.ExternalFulfillmentShipment.GenerateShipLabels("SHIPMENT_ID", GenerateShipLabelsOperation.GENERATE, body, "SHIPPING_OPTION_ID");
     }
 
     public void GenerateInvoice()

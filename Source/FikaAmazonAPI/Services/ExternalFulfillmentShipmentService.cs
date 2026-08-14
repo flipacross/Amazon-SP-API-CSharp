@@ -76,23 +76,22 @@ namespace FikaAmazonAPI.Services
 
         #endregion
 
-        public Shipment GetShipment(string shipmentId, string operation) =>
-            Task.Run(() => GetShipmentAsync(shipmentId, operation)).ConfigureAwait(false).GetAwaiter().GetResult();
+        public Shipment GetShipment(string shipmentId) =>
+            Task.Run(() => GetShipmentAsync(shipmentId)).ConfigureAwait(false).GetAwaiter().GetResult();
 
-        public async Task<Shipment> GetShipmentAsync(string shipmentId, string operation, CancellationToken ct = default)
+        public async Task<Shipment> GetShipmentAsync(string shipmentId, CancellationToken ct = default)
         {
-            var query = new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>("operation", operation) };
-            await CreateAuthorizedRequestAsync(ExternalFulfillmentShipmentApiUrls.Shipment(shipmentId), Method.Get, query, null, CacheTokenData.TokenDataType.Normal, null, ct);
+            await CreateAuthorizedRequestAsync(ExternalFulfillmentShipmentApiUrls.Shipment(shipmentId), Method.Get, null, null, CacheTokenData.TokenDataType.Normal, null, ct);
 
             return await ExecuteRequestAsync<Shipment>(RateLimitType.ExternalFulfillmentShipment_GetShipment, ct);
         }
 
-        public void ProcessShipment(string shipmentId, string operation, ShipmentAcknowledgementRequest body) =>
+        public void ProcessShipment(string shipmentId, ProcessShipmentOperation operation, ShipmentAcknowledgementRequest body) =>
             Task.Run(() => ProcessShipmentAsync(shipmentId, operation, body)).ConfigureAwait(false).GetAwaiter().GetResult();
 
-        public async Task ProcessShipmentAsync(string shipmentId, string operation, ShipmentAcknowledgementRequest body, CancellationToken ct = default)
+        public async Task ProcessShipmentAsync(string shipmentId, ProcessShipmentOperation operation, ShipmentAcknowledgementRequest body, CancellationToken ct = default)
         {
-            var query = new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>("operation", operation) };
+            var query = new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>("operation", operation.ToString()) };
 
             await CreateAuthorizedRequestAsync(ExternalFulfillmentShipmentApiUrls.Shipment(shipmentId), Method.Post, query, body, CacheTokenData.TokenDataType.Normal, null, ct);
             await ExecuteRequestAsync<object>(RateLimitType.ExternalFulfillmentShipment_ProcessShipment, ct);
@@ -127,12 +126,12 @@ namespace FikaAmazonAPI.Services
             return await ExecuteRequestAsync<ShippingOptionsResponse>(RateLimitType.ExternalFulfillmentShipment_RetrieveShippingOptions, ct);
         }
 
-        public ShipLabelsResponse GenerateShipLabels(string shipmentId, string operation, ShipLabelsInput body, string shippingOptionId = null) =>
+        public ShipLabelsResponse GenerateShipLabels(string shipmentId, GenerateShipLabelsOperation operation, ShipLabelsInput body, string shippingOptionId = null) =>
             Task.Run(() => GenerateShipLabelsAsync(shipmentId, operation, body, shippingOptionId)).ConfigureAwait(false).GetAwaiter().GetResult();
 
-        public async Task<ShipLabelsResponse> GenerateShipLabelsAsync(string shipmentId, string operation, ShipLabelsInput body, string shippingOptionId = null, CancellationToken ct = default)
+        public async Task<ShipLabelsResponse> GenerateShipLabelsAsync(string shipmentId, GenerateShipLabelsOperation operation, ShipLabelsInput body, string shippingOptionId = null, CancellationToken ct = default)
         {
-            var query = new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>("operation", operation) };
+            var query = new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>("operation", operation.ToString()) };
 
             if (!string.IsNullOrEmpty(shippingOptionId))
                 query.Add(new KeyValuePair<string, string>("shippingOptionId", shippingOptionId));
