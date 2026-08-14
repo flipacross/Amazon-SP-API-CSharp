@@ -254,6 +254,17 @@ namespace FikaAmazonAPI.Utils
               
               { RateLimitType.VendorDirectFulfillmentInventory_SubmitInventoryUpdate, new RateLimits(10M, 10) },
 
+              { RateLimitType.ExternalFulfillmentShipment_GetShipments,              new RateLimits(2.0M, 5) },
+              { RateLimitType.ExternalFulfillmentShipment_GetShipment,               new RateLimits(2.0M, 5) },
+              { RateLimitType.ExternalFulfillmentShipment_ProcessShipment,           new RateLimits(1.0M, 5) },
+              { RateLimitType.ExternalFulfillmentShipment_CreatePackages,            new RateLimits(1.0M, 5) },
+              { RateLimitType.ExternalFulfillmentShipment_UpdatePackage,             new RateLimits(1.0M, 5) },
+              { RateLimitType.ExternalFulfillmentShipment_RetrieveShippingOptions,   new RateLimits(1.0M, 5) },
+              { RateLimitType.ExternalFulfillmentShipment_GenerateShipLabels,        new RateLimits(1.0M, 5) },
+              { RateLimitType.ExternalFulfillmentShipment_GenerateInvoice,           new RateLimits(1.0M, 5) },
+              { RateLimitType.ExternalFulfillmentShipment_RetrieveInvoice,           new RateLimits(1.0M, 5) },
+              { RateLimitType.ExternalFulfillmentShipment_UpdatePackageStatus,       new RateLimits(1.0M, 5) },
+
               { RateLimitType.Service_GetServiceJobByServiceJobId,       new RateLimits(20.0M, 40) },
               { RateLimitType.Service_GetServiceJobs,                    new RateLimits(10.0M, 40) },
               { RateLimitType.Service_CancelServiceJobByServiceJobId,    new RateLimits(5.0M, 20) },
