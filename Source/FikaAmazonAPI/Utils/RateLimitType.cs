@@ -246,6 +246,33 @@
         
         VendorDirectFulfillmentInventory_SubmitInventoryUpdate,
 
+        VendorDirectFulfillmentPayments_SubmitInvoice,
+
+        VendorDirectFulfillmentTransactions_GetTransactionStatus,
+
+        VendorDirectFulfillmentShipping_GetShippingLabels,
+        VendorDirectFulfillmentShipping_SubmitShippingLabelRequest,
+        VendorDirectFulfillmentShipping_GetShippingLabel,
+        VendorDirectFulfillmentShipping_SubmitShipmentConfirmations,
+        VendorDirectFulfillmentShipping_SubmitShipmentStatusUpdates,
+        VendorDirectFulfillmentShipping_GetCustomerInvoices,
+        VendorDirectFulfillmentShipping_GetCustomerInvoice,
+        VendorDirectFulfillmentShipping_GetPackingSlips,
+        VendorDirectFulfillmentShipping_GetPackingSlip,
+
+        VendorShipments_SubmitShipmentConfirmations,
+        VendorShipments_SubmitShipments,
+        VendorShipments_GetShipmentDetails,
+        VendorShipments_GetShipmentLabels,
+
+        VendorInvoices_SubmitInvoices,
+
+        DataKiosk_GetQueries,
+        DataKiosk_CreateQuery,
+        DataKiosk_CancelQuery,
+        DataKiosk_GetQuery,
+        DataKiosk_GetDocument,
+
         ExternalFulfillmentShipment_GetShipments,
         ExternalFulfillmentShipment_GetShipment,
         ExternalFulfillmentShipment_ProcessShipment,
