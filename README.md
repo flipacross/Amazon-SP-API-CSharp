@@ -24,54 +24,60 @@ Install-Package CSharpAmazonSpAPI
 ```
 
 ---
-### Tasks
+### Supported APIs
+
 #### Seller
 
-- [x] [OrdersV0](https://developer-docs.amazon.com/sp-api/docs/orders-api-v0-reference)
-- [x] [Reports](https://developer-docs.amazon.com/sp-api/docs/reports-api-v2021-06-30-reference)
-- [x] [FinancesV0](https://developer-docs.amazon.com/sp-api/docs/finances-api-reference)
-- [x] [Feeds](https://developer-docs.amazon.com/sp-api/docs/feeds-api-v2021-06-30-reference) [Use Case Guide](https://developer-docs.amazon.com/sp-api/docs/feeds-api-v2021-06-30-use-case-guide) [feedType](https://developer-docs.amazon.com/sp-api/docs/feed-type-values)
-- [x] [ListingsItems](https://developer-docs.amazon.com/sp-api/docs/listings-items-api-v2021-08-01-reference)  [Use Case Guide](https://developer-docs.amazon.com/sp-api/docs/listings-items-api-v2021-08-01-use-case-guide)
-- [x] [Restrictions](https://developer-docs.amazon.com/sp-api/docs/listings-restrictions-api-v2021-08-01-reference)  [Use Case Guide](https://developer-docs.amazon.com/sp-api/docs/listings-restrictions-api-v2021-08-01-use-case-guide)
-- [x] [ProductTypes](https://developer-docs.amazon.com/sp-api/docs/product-type-definitions-api-v2020-09-01-reference)  [Use Case Guide](https://developer-docs.amazon.com/sp-api/docs/product-type-api-use-case-guide)
-- [x] [Uploads](https://developer-docs.amazon.com/sp-api/docs/uploads-api-reference)  [Use Case Guide](https://developer-docs.amazon.com/sp-api/docs/uploads-api-use-case-guide)
-- [x] [shipmentInvoicingV0](https://developer-docs.amazon.com/sp-api/docs/shipment-invoicing-api-v0-reference)
-- [x] [Shippings](https://developer-docs.amazon.com/sp-api/docs/shipping-api-v1-reference)
-- [x] [CatalogItemsV0](https://developer-docs.amazon.com/sp-api/docs/catalog-items-api-v0-reference)
-- [x] [CatalogItemsV20220401](https://developer-docs.amazon.com/sp-api/docs/catalog-items-api-v2022-04-01-reference)
-- [x] [FBAInventory](https://developer-docs.amazon.com/sp-api/docs/fbainventory-api-v1-reference)
-- [x] [FBASmallAndLight](https://developer-docs.amazon.com/sp-api/docs/fbasmallandlight-api-v1-reference)
-- [x] [FBAInboundEligibility](https://developer-docs.amazon.com/sp-api/docs/fbainboundeligibility-api-v1-reference)
-- [x] [FulFillmentInbound](https://developer-docs.amazon.com/sp-api/docs/fulfillment-inbound-api-v0-reference)
-- [x] [FulFillmentOutbound](https://developer-docs.amazon.com/sp-api/docs/fulfillment-outbound-api-v2020-07-01-reference)
-- [x] [MerchantFulFillment](https://developer-docs.amazon.com/sp-api/docs/merchant-fulfillment-api-v0-reference)
-- [x] [Messaging](https://developer-docs.amazon.com/sp-api/docs/messaging-api-v1-reference)
-- [x] [Notifications](https://developer-docs.amazon.com/sp-api/docs/notifications-api-v1-reference)  [Use Case Guide](https://developer-docs.amazon.com/sp-api/docs/notifications-api-v1-use-case-guide)
-- [x] [ProductFeesV0](https://developer-docs.amazon.com/sp-api/docs/product-fees-api-v0-reference)
-- [x] [ProductPricingV0](https://developer-docs.amazon.com/sp-api/docs/product-pricing-api-v0-reference)
-- [x] [Sales](https://developer-docs.amazon.com/sp-api/docs/sales-api-v1-reference)
-- [x] [Sellers](https://developer-docs.amazon.com/sp-api/docs/sellers-api-v1-reference)
-- [x] [Services](https://developer-docs.amazon.com/sp-api/docs/services-api-v1-reference) — `getServiceJobByServiceJobId`, `getServiceJobs`, `cancelServiceJobByServiceJobId`, `completeServiceJobByServiceJobId`
-- [x] [Solicitations](https://developer-docs.amazon.com/sp-api/docs/solicitations-api-v1-reference)
-- [x] [Token](https://developer-docs.amazon.com/sp-api/docs/tokens-api-v2021-03-01-reference)  [Use Case Guide](https://developer-docs.amazon.com/sp-api/docs/tokens-api-use-case-guide)
-- [x] [Authorization](https://developer-docs.amazon.com/sp-api/docs/authorization-api-v1-reference)
-- [x] [Easy Ship](https://developer-docs.amazon.com/sp-api/docs/easy-ship-api-v2022-03-23-reference)
-- [x] [A+ Content](https://developer-docs.amazon.com/sp-api/docs/selling-partner-api-for-a-content-management)
-- [x] [Replenishment](https://developer-docs.amazon.com/sp-api/docs/replenishment-api-v2022-11-07-reference) — `listOffers`, `listOfferMetrics`, `getSellingPartnerMetrics`
-- [x] [External Fulfillment Shipments](https://developer-docs.amazon.com/sp-api/reference/externalfulfillmentshipments-api-v2024-09-11) — `getShipments`, `getShipment`, `processShipment`, `createPackages`, `updatePackage`, `retrieveShippingOptions`, `generateShipLabels`, `generateInvoice`, `retrieveInvoice`, `updatePackageStatus`
+| API | Status | Notes / Use Case Guide |
+| --- | :---: | --- |
+| [OrdersV0](https://developer-docs.amazon.com/sp-api/docs/orders-api-v0-reference) | ✅ | |
+| [Reports](https://developer-docs.amazon.com/sp-api/docs/reports-api-v2021-06-30-reference) | ✅ | |
+| [FinancesV0](https://developer-docs.amazon.com/sp-api/docs/finances-api-reference) | ✅ | |
+| [Feeds](https://developer-docs.amazon.com/sp-api/docs/feeds-api-v2021-06-30-reference) | ✅ | [Use Case Guide](https://developer-docs.amazon.com/sp-api/docs/feeds-api-v2021-06-30-use-case-guide) · [feedType](https://developer-docs.amazon.com/sp-api/docs/feed-type-values) |
+| [ListingsItems](https://developer-docs.amazon.com/sp-api/docs/listings-items-api-v2021-08-01-reference) | ✅ | [Use Case Guide](https://developer-docs.amazon.com/sp-api/docs/listings-items-api-v2021-08-01-use-case-guide) |
+| [Restrictions](https://developer-docs.amazon.com/sp-api/docs/listings-restrictions-api-v2021-08-01-reference) | ✅ | [Use Case Guide](https://developer-docs.amazon.com/sp-api/docs/listings-restrictions-api-v2021-08-01-use-case-guide) |
+| [ProductTypes](https://developer-docs.amazon.com/sp-api/docs/product-type-definitions-api-v2020-09-01-reference) | ✅ | [Use Case Guide](https://developer-docs.amazon.com/sp-api/docs/product-type-api-use-case-guide) |
+| [Uploads](https://developer-docs.amazon.com/sp-api/docs/uploads-api-reference) | ✅ | [Use Case Guide](https://developer-docs.amazon.com/sp-api/docs/uploads-api-use-case-guide) |
+| [shipmentInvoicingV0](https://developer-docs.amazon.com/sp-api/docs/shipment-invoicing-api-v0-reference) | ✅ | |
+| [Shippings](https://developer-docs.amazon.com/sp-api/docs/shipping-api-v1-reference) | ✅ | |
+| [CatalogItemsV0](https://developer-docs.amazon.com/sp-api/docs/catalog-items-api-v0-reference) | ✅ | |
+| [CatalogItemsV20220401](https://developer-docs.amazon.com/sp-api/docs/catalog-items-api-v2022-04-01-reference) | ✅ | |
+| [FBAInventory](https://developer-docs.amazon.com/sp-api/docs/fbainventory-api-v1-reference) | ✅ | |
+| [FBASmallAndLight](https://developer-docs.amazon.com/sp-api/docs/fbasmallandlight-api-v1-reference) | ✅ | |
+| [FBAInboundEligibility](https://developer-docs.amazon.com/sp-api/docs/fbainboundeligibility-api-v1-reference) | ✅ | |
+| [FulFillmentInbound](https://developer-docs.amazon.com/sp-api/docs/fulfillment-inbound-api-v0-reference) | ✅ | |
+| [FulFillmentOutbound](https://developer-docs.amazon.com/sp-api/docs/fulfillment-outbound-api-v2020-07-01-reference) | ✅ | |
+| [MerchantFulFillment](https://developer-docs.amazon.com/sp-api/docs/merchant-fulfillment-api-v0-reference) | ✅ | |
+| [Messaging](https://developer-docs.amazon.com/sp-api/docs/messaging-api-v1-reference) | ✅ | |
+| [Notifications](https://developer-docs.amazon.com/sp-api/docs/notifications-api-v1-reference) | ✅ | [Use Case Guide](https://developer-docs.amazon.com/sp-api/docs/notifications-api-v1-use-case-guide) |
+| [ProductFeesV0](https://developer-docs.amazon.com/sp-api/docs/product-fees-api-v0-reference) | ✅ | |
+| [ProductPricingV0](https://developer-docs.amazon.com/sp-api/docs/product-pricing-api-v0-reference) | ✅ | |
+| [Sales](https://developer-docs.amazon.com/sp-api/docs/sales-api-v1-reference) | ✅ | |
+| [Sellers](https://developer-docs.amazon.com/sp-api/docs/sellers-api-v1-reference) | ✅ | |
+| [Services](https://developer-docs.amazon.com/sp-api/docs/services-api-v1-reference) | ✅ | `getServiceJobByServiceJobId`, `getServiceJobs`, `cancelServiceJobByServiceJobId`, `completeServiceJobByServiceJobId` |
+| [Solicitations](https://developer-docs.amazon.com/sp-api/docs/solicitations-api-v1-reference) | ✅ | |
+| [Token](https://developer-docs.amazon.com/sp-api/docs/tokens-api-v2021-03-01-reference) | ✅ | [Use Case Guide](https://developer-docs.amazon.com/sp-api/docs/tokens-api-use-case-guide) |
+| [Authorization](https://developer-docs.amazon.com/sp-api/docs/authorization-api-v1-reference) | ✅ | |
+| [Easy Ship](https://developer-docs.amazon.com/sp-api/docs/easy-ship-api-v2022-03-23-reference) | ✅ | |
+| [A+ Content](https://developer-docs.amazon.com/sp-api/docs/selling-partner-api-for-a-content-management) | ✅ | |
+| [Replenishment](https://developer-docs.amazon.com/sp-api/docs/replenishment-api-v2022-11-07-reference) | ✅ | `listOffers`, `listOfferMetrics`, `getSellingPartnerMetrics` |
+| [External Fulfillment Shipments](https://developer-docs.amazon.com/sp-api/reference/externalfulfillmentshipments-api-v2024-09-11) | ✅ | `getShipments`, `getShipment`, `processShipment`, `createPackages`, `updatePackage`, `retrieveShippingOptions`, `generateShipLabels`, `generateInvoice`, `retrieveInvoice`, `updatePackageStatus` |
 
+#### Vendor
 
-#### Vendor 
+| API | Status | Notes |
+| --- | :---: | --- |
+| [VendorDirectFulfillmentInventoryV1](https://developer-docs.amazon.com/sp-api/docs/vendor-direct-fulfillment-inventory-api-v1-reference) | ✅ | |
+| [VendorDirectFulfillmentOrdersV1](https://developer-docs.amazon.com/sp-api/docs/vendor-direct-fulfillment-orders-api-v1-reference) | ✅ | |
+| [VendorDirectFulfillmentPaymentsV1](https://developer-docs.amazon.com/sp-api/docs/vendor-direct-fulfillment-payments-api-v1-reference) | ⬜ | |
+| [VendorDirectFulfillmentShippingV1](https://developer-docs.amazon.com/sp-api/docs/vendor-direct-fulfillment-shipping-api-v1-reference) | ⬜ | |
+| [VendorDirectFulfillmentTransactionsV1](https://developer-docs.amazon.com/sp-api/docs/vendor-direct-fulfillment-transactions-api-v1-reference) | ⬜ | |
+| [VendorOrders](https://developer-docs.amazon.com/sp-api/docs/vendor-orders-api-v1-reference) | ✅ | |
+| [vendorInvoices](https://developer-docs.amazon.com/sp-api/docs/vendor-invoices-api-v1-reference) | ⬜ | |
+| [VendorShipments](https://developer-docs.amazon.com/sp-api/docs/vendor-shipments-api-v1-reference) | ⬜ | |
+| [VendorTransactionStatus](https://developer-docs.amazon.com/sp-api/docs/vendor-transaction-status-api-v1-reference) | ✅ | |
 
-- [ ] [VendorDirectFulfillmentInventoryV1](https://developer-docs.amazon.com/sp-api/docs/vendor-direct-fulfillment-inventory-api-v1-reference)
-- [x] [VendorDirectFulfillmentOrdersV1](https://developer-docs.amazon.com/sp-api/docs/vendor-direct-fulfillment-orders-api-v1-reference)
-- [ ] [VendorDirectFulfillmentPaymentsV1](https://developer-docs.amazon.com/sp-api/docs/vendor-direct-fulfillment-payments-api-v1-reference)
-- [ ] [VendorDirectFulfillmentShippingV1](https://developer-docs.amazon.com/sp-api/docs/vendor-direct-fulfillment-shipping-api-v1-reference)
-- [ ] [VendorDirectFulfillmentTransactionsV1](https://developer-docs.amazon.com/sp-api/docs/vendor-direct-fulfillment-transactions-api-v1-reference)
-- [x] [VendorOrders](https://developer-docs.amazon.com/sp-api/docs/vendor-orders-api-v1-reference)
-- [ ] [vendorInvoices](https://developer-docs.amazon.com/sp-api/docs/vendor-invoices-api-v1-reference)
-- [ ] [VendorShipments](https://developer-docs.amazon.com/sp-api/docs/vendor-shipments-api-v1-reference)
-- [ ] [VendorTransactionStatus](https://developer-docs.amazon.com/sp-api/docs/vendor-transaction-status-api-v1-reference)
+> **Legend:** ✅ Supported · ⬜ Not yet implemented
 
 
 
