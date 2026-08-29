@@ -7,6 +7,9 @@
     <Product>CSharp Amazon Sp API</Product>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <LangVersion>8.0</LangVersion>
+    <!-- Annotations-only: lets the codebase use ? on reference types (ILoggerFactory?, CultureInfo?, ...)
+         without turning on full nullable flow analysis, which this codebase was not written for. -->
+    <Nullable>annotations</Nullable>
     <Version>1.9.32</Version>
     <AssemblyVersion>1.9.32</AssemblyVersion>
     <FileVersion>1.9.32</FileVersion>
@@ -32,13 +35,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWSSDK.SecurityToken" Version="4.0.6.2" />
-    <PackageReference Include="AWSSDK.SQS" Version="4.0.2.27" />
+    <PackageReference Include="AWSSDK.SecurityToken" Version="4.0.100.11" />
+    <PackageReference Include="AWSSDK.SQS" Version="4.0.100.11" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="System.Text.Json" Version="10.0.7" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.7" />
+    <PackageReference Include="System.Text.Json" Version="10.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.11" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-    <PackageReference Include="StandardSocketsHttpHandler" Version="2.2.0.8" />
+    <PackageReference Include="StandardSocketsHttpHandler" Version="2.2.0.10" />
     <PackageReference Include="System.Collections" Version="4.3.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="System.Reflection" Version="4.3.0" />

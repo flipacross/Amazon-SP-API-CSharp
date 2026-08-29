@@ -181,10 +181,10 @@ namespace FikaAmazonAPI.SampleCode
                 e.SetObserved();
             };
 
-            var SQS_URL = Environment.GetEnvironmentVariable("SQS_URL");
+            var SQS_URL = SampleConfiguration.RequiredEnv("SQS_URL");
             var param = new ParameterMessageReceiver(
-                Environment.GetEnvironmentVariable("AccessKey"),
-                Environment.GetEnvironmentVariable("SecretKey"),
+                SampleConfiguration.RequiredEnv("AccessKey"),
+                SampleConfiguration.RequiredEnv("SecretKey"),
                 SQS_URL,
                 Amazon.RegionEndpoint.USEast2,
                 WaitTimeSeconds: 20); // Optional - long polling (20s) is the default; pass 0 for short polling

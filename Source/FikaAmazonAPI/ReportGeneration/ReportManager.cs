@@ -88,11 +88,11 @@ namespace FikaAmazonAPI.ReportGeneration
 
         #region ReturnFBAOrder
 
-        public List<ReturnFBAOrderRow> GetReturnFBAOrder(int days, List<MarketPlace> marketplaces = null) =>
+        public List<ReturnFBAOrderRow> GetReturnFBAOrder(int days, List<MarketPlace>? marketplaces = null) =>
             Task.Run(() => GetReturnFBAOrderAsync(days, marketplaces)).ConfigureAwait(false).GetAwaiter().GetResult();
 
         public async Task<List<ReturnFBAOrderRow>> GetReturnFBAOrderAsync(int days,
-            List<MarketPlace> marketplaces = null, CancellationToken cancellationToken = default)
+            List<MarketPlace>? marketplaces = null, CancellationToken cancellationToken = default)
         {
             DateTime fromDate = DateTime.UtcNow.AddDays(-1 * days);
             DateTime toDate = DateTime.UtcNow;
@@ -100,12 +100,12 @@ namespace FikaAmazonAPI.ReportGeneration
         }
 
         public List<ReturnFBAOrderRow> GetReturnFBAOrder(DateTime fromDate, DateTime toDate,
-            List<MarketPlace> marketplaces = null) =>
+            List<MarketPlace>? marketplaces = null) =>
             Task.Run(() => GetReturnFBAOrderAsync(fromDate, toDate, marketplaces)).ConfigureAwait(false).GetAwaiter()
                 .GetResult();
 
         public async Task<List<ReturnFBAOrderRow>> GetReturnFBAOrderAsync(DateTime fromDate, DateTime toDate,
-            List<MarketPlace> marketplaces = null, CancellationToken cancellationToken = default)
+            List<MarketPlace>? marketplaces = null, CancellationToken cancellationToken = default)
         {
             using var stream = await GetReturnFBAOrderAsync(_amazonConnection, fromDate, toDate, marketplaces,
                 cancellationToken);
@@ -115,7 +115,7 @@ namespace FikaAmazonAPI.ReportGeneration
         }
 
         private async Task<MemoryStream> GetReturnFBAOrderAsync(AmazonConnection amazonConnection, DateTime fromDate,
-            DateTime toDate, List<MarketPlace> marketplaces = null, CancellationToken cancellationToken = default)
+            DateTime toDate, List<MarketPlace>? marketplaces = null, CancellationToken cancellationToken = default)
         {
             return await amazonConnection.Reports.CreateReportAndDownloadFileStreamAsync(
                 ReportTypes.GET_FBA_FULFILLMENT_CUSTOMER_RETURNS_DATA, fromDate, toDate, marketplaces: marketplaces,
@@ -257,10 +257,10 @@ namespace FikaAmazonAPI.ReportGeneration
 
         #region Products
 
-        public List<ProductsRow> GetProducts(List<MarketPlace> marketplaces = null) =>
+        public List<ProductsRow> GetProducts(List<MarketPlace>? marketplaces = null) =>
             Task.Run(() => GetProductsAsync(marketplaces)).ConfigureAwait(false).GetAwaiter().GetResult();
 
-        public async Task<List<ProductsRow>> GetProductsAsync(List<MarketPlace> marketplaces = null,
+        public async Task<List<ProductsRow>> GetProductsAsync(List<MarketPlace>? marketplaces = null,
             CancellationToken cancellationToken = default)
         {
             using var stream = await GetProductsAsync(_amazonConnection, marketplaces, cancellationToken);
@@ -268,7 +268,7 @@ namespace FikaAmazonAPI.ReportGeneration
             return report.Data;
         }
 
-        private Task<MemoryStream> GetProductsAsync(AmazonConnection amazonConnection, List<MarketPlace> marketplaces = null,
+        private Task<MemoryStream> GetProductsAsync(AmazonConnection amazonConnection, List<MarketPlace>? marketplaces = null,
             CancellationToken cancellationToken = default)
         {
             return amazonConnection.Reports.CreateReportAndDownloadFileStreamAsync(ReportTypes.GET_MERCHANT_LISTINGS_ALL_DATA,
@@ -370,12 +370,12 @@ namespace FikaAmazonAPI.ReportGeneration
         }
 
         public List<OrderInvoicingReportRow> GetOrderInvoicingData(DateTime fromDate, DateTime toDate,
-            List<MarketPlace> marketplaces = null) =>
+            List<MarketPlace>? marketplaces = null) =>
             Task.Run(() => GetOrderInvoicingDataAsync(fromDate, toDate, marketplaces)).ConfigureAwait(false)
                 .GetAwaiter().GetResult();
 
         public async Task<List<OrderInvoicingReportRow>> GetOrderInvoicingDataAsync(DateTime fromDate, DateTime toDate,
-            List<MarketPlace> marketplaces = null)
+            List<MarketPlace>? marketplaces = null)
         {
             List<OrderInvoicingReportRow> list = new List<OrderInvoicingReportRow>();
             var dateList = ReportDateRange.GetDateRange(fromDate, toDate, DAY_30);
@@ -391,7 +391,7 @@ namespace FikaAmazonAPI.ReportGeneration
         }
 
         private async Task<MemoryStream> GetOrderInvoicingDataAsync(AmazonConnection amazonConnection, DateTime fromDate,
-            DateTime toDate, List<MarketPlace> marketplaces = null)
+            DateTime toDate, List<MarketPlace>? marketplaces = null)
         {
             var options = new AmazonSpApiSDK.Models.Reports.ReportOptions();
             options.Add("ShowSalesChannel", "true");
@@ -404,12 +404,12 @@ namespace FikaAmazonAPI.ReportGeneration
         #region VatInvoicing
 
         public List<VatInvoicingReportRow> GetVATInvoicingData(DateTime fromDate, DateTime toDate,
-           List<MarketPlace> marketplaces = null) =>
+           List<MarketPlace>? marketplaces = null) =>
            Task.Run(() => GetVATInvoicingDataAsync(fromDate, toDate, marketplaces)).ConfigureAwait(false)
                .GetAwaiter().GetResult();
 
         public async Task<List<VatInvoicingReportRow>> GetVATInvoicingDataAsync(DateTime fromDate, DateTime toDate,
-            List<MarketPlace> marketplaces = null)
+            List<MarketPlace>? marketplaces = null)
         {
             List<VatInvoicingReportRow> list = new List<VatInvoicingReportRow>();
             var dateList = ReportDateRange.GetDateRange(fromDate, toDate, DAY_30);
@@ -425,7 +425,7 @@ namespace FikaAmazonAPI.ReportGeneration
         }
 
         private async Task<string> GetVATInvoicingDataAsync(AmazonConnection amazonConnection, DateTime fromDate,
-            DateTime toDate, List<MarketPlace> marketplaces = null)
+            DateTime toDate, List<MarketPlace>? marketplaces = null)
         {
             var options = new ReportOptions();
             options.Add("ReportOption=All", "true");
