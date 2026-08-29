@@ -175,8 +175,6 @@ namespace FikaAmazonAPI.SampleCode
         public async Task StartReceivingNotificationMessagesAsync(CancellationToken cancellationToken)
         {
             // Prevent unobserved task exceptions from crashing the process.
-            // The library fires off ProcessAnyOfferChangedMessage without await,
-            // so any exception in that path becomes an unobserved task exception.
             TaskScheduler.UnobservedTaskException += (sender, e) =>
             {
                 Console.WriteLine($"Unobserved task exception caught: {e.Exception?.Message}");
@@ -189,7 +187,7 @@ namespace FikaAmazonAPI.SampleCode
                 Environment.GetEnvironmentVariable("SecretKey"),
                 SQS_URL,
                 Amazon.RegionEndpoint.USEast2,
-                WaitTimeSeconds: 20); // Enable SQS long polling to reduce empty receives and cost
+                WaitTimeSeconds: 20); // Optional - long polling (20s) is the default; pass 0 for short polling
 
             var messageReceiver = new CustomMessageReceiver();
 
