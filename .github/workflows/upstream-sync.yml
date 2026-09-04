@@ -118,6 +118,7 @@ jobs:
 
           HEAD_REF="${GITHUB_REPOSITORY_OWNER}:${{ env.BRANCH_NAME }}"
           EXISTING_PR_URL=$(gh api \
+            --method GET \
             "repos/${GITHUB_REPOSITORY}/pulls" \
             -f head="$HEAD_REF" \
             -f base="main" \
