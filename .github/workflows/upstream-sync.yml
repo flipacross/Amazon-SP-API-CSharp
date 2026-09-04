@@ -111,22 +111,30 @@ jobs:
       - name: Create or reuse pull request
         if: env.HAS_CHANGES == 'true'
         env:
-          GH_TOKEN: ${{ secrets.INFRA_REPO_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           git ls-remote --exit-code --heads origin "${{ env.BRANCH_NAME }}" >/dev/null
 
-          EXISTING_PR_URL=$(gh pr list --head "${{ env.BRANCH_NAME }}" --base main --state open --json url --jq '.[0].url')
+          HEAD_REF="${GITHUB_REPOSITORY_OWNER}:${{ env.BRANCH_NAME }}"
+          EXISTING_PR_URL=$(gh api \
+            "repos/${GITHUB_REPOSITORY}/pulls" \
+            -f head="$HEAD_REF" \
+            -f base="main" \
+            -f state="open" \
+            --jq '.[0].html_url // ""')
           if [ -n "$EXISTING_PR_URL" ]; then
             echo "Pull request already exists: $EXISTING_PR_URL"
             exit 0
           fi
 
-          gh pr create \
-            --base main \
-            --head "${{ env.BRANCH_NAME }}" \
-            --title "chore: sync upstream Amazon-SP-API-CSharp" \
-            --body "$(cat <<'EOF'
+          gh api \
+            --method POST \
+            "repos/${GITHUB_REPOSITORY}/pulls" \
+            -f base="main" \
+            -f head="$HEAD_REF" \
+            -f title="chore: sync upstream Amazon-SP-API-CSharp" \
+            -f body="$(cat <<'EOF'
           ## Summary
           - merge latest changes from `abuzuhri/Amazon-SP-API-CSharp`
           - preserve FlipAcross fork customizations
