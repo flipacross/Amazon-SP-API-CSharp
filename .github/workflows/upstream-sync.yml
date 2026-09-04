@@ -91,11 +91,13 @@ jobs:
             git commit --no-edit
           fi
           echo "BRANCH_NAME=$BRANCH_NAME" >> "$GITHUB_ENV"
-          if git diff --quiet origin/main...HEAD; then
+          COMMITS_AHEAD=$(git rev-list --count origin/main..HEAD)
+          if [ "$COMMITS_AHEAD" -eq 0 ] || git diff --quiet origin/main..HEAD; then
             echo "HAS_CHANGES=false" >> "$GITHUB_ENV"
             echo "No upstream changes to sync."
           else
             echo "HAS_CHANGES=true" >> "$GITHUB_ENV"
+            echo "Found $COMMITS_AHEAD commit(s) to sync."
           fi
 
       - name: Build merged branch
@@ -104,7 +106,7 @@ jobs:
 
       - name: Push sync branch
         if: env.HAS_CHANGES == 'true'
-        run: git push --force-with-lease -u origin "${{ env.BRANCH_NAME }}"
+        run: git push --force-with-lease origin "HEAD:${{ env.BRANCH_NAME }}"
 
       - name: Create or reuse pull request
         if: env.HAS_CHANGES == 'true'
@@ -112,6 +114,8 @@ jobs:
           GH_TOKEN: ${{ secrets.INFRA_REPO_TOKEN }}
         shell: bash
         run: |
+          git ls-remote --exit-code --heads origin "${{ env.BRANCH_NAME }}" >/dev/null
+
           EXISTING_PR_URL=$(gh pr list --head "${{ env.BRANCH_NAME }}" --base main --state open --json url --jq '.[0].url')
           if [ -n "$EXISTING_PR_URL" ]; then
             echo "Pull request already exists: $EXISTING_PR_URL"
