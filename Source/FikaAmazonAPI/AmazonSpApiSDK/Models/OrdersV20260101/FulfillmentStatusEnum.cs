@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using FikaAmazonAPI.Utils;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -11,7 +12,7 @@ namespace FikaAmazonAPI.AmazonSpApiSDK.Models.OrdersV20260101
     /// The current fulfillment status of an order, indicating where the order is in the fulfillment process from placement to handover to carrier.
     /// </summary>
     /// <value>The current fulfillment status of an order, indicating where the order is in the fulfillment process from placement to handover to carrier.</value>
-    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonConverter(typeof(SafeStringEnumConverter))]
     public enum FulfillmentStatusEnum
     {
 

@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using FikaAmazonAPI.Utils;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -11,7 +12,7 @@ namespace FikaAmazonAPI.AmazonSpApiSDK.Models.OrdersV20260101
     /// Category classification of the proceeds breakdown.
     /// </summary>
     /// <value>Category classification of the proceeds breakdown.</value>
-    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonConverter(typeof(SafeStringEnumConverter))]
     public enum ProceedsBreakdownTypeEnum
     {
         /// <summary>
