@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using FikaAmazonAPI.Utils;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -11,7 +12,7 @@ namespace FikaAmazonAPI.AmazonSpApiSDK.Models.OrdersV20260101
     /// Granular status information providing specific details about the package's current location and handling stage.
     /// </summary>
     /// <value>Granular status information providing specific details about the package's current location and handling stage.</value>
-    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonConverter(typeof(SafeStringEnumConverter))]
     public enum PackageDetailedStatusEnum
     {
 

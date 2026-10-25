@@ -25,9 +25,11 @@ namespace FikaAmazonAPI.AmazonSpApiSDK.Models.OrdersV20260101
         /// Initializes a new instance of the <see cref="OrderItemTax"/> class.
         /// </summary>
         /// <param name="orderItemTaxCollections">A list of tax collections associated with this order item.</param>
-        public OrderItemTax(List<OrderItemTaxCollection> orderItemTaxCollections)
+        /// <param name="taxCalculationBreakdowns">A list of tax calculation breakdowns for this order item, such as the VAT reporting scheme (UOSS, IOSS).</param>
+        public OrderItemTax(List<OrderItemTaxCollection> orderItemTaxCollections, List<OrderItemTaxCalculationBreakdown> taxCalculationBreakdowns)
         {
             this.TaxCollection = orderItemTaxCollections;
+            this.TaxCalculationBreakdowns = taxCalculationBreakdowns;
         }
 
         /// <summary>
@@ -38,6 +40,13 @@ namespace FikaAmazonAPI.AmazonSpApiSDK.Models.OrdersV20260101
         public List<OrderItemTaxCollection> TaxCollection { get; set; }
 
         /// <summary>
+        /// A list of tax calculation breakdowns for this order item.
+        /// Each entry describes how the tax was calculated, such as the VAT reporting scheme (UOSS, IOSS).
+        /// </summary>
+        [DataMember(Name = "taxCalculationBreakdowns", EmitDefaultValue = false)]
+        public List<OrderItemTaxCalculationBreakdown> TaxCalculationBreakdowns { get; set; }
+
+        /// <summary>
         /// Returns the string representation of the object.
         /// </summary>
         /// <returns>String representation of the object</returns>
@@ -46,6 +55,7 @@ namespace FikaAmazonAPI.AmazonSpApiSDK.Models.OrdersV20260101
             var sb = new StringBuilder();
             sb.Append("class OrderItemTax {\n");
             sb.Append("  TaxCollection: ").Append(TaxCollection).Append("\n");
+            sb.Append("  TaxCalculationBreakdowns: ").Append(TaxCalculationBreakdowns).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -80,9 +90,16 @@ namespace FikaAmazonAPI.AmazonSpApiSDK.Models.OrdersV20260101
                 return false;
 
             return
-                this.TaxCollection == input.TaxCollection ||
-                (this.TaxCollection != null &&
-                 this.TaxCollection.SequenceEqual(input.TaxCollection));
+                (
+                    this.TaxCollection == input.TaxCollection ||
+                    (this.TaxCollection != null &&
+                     this.TaxCollection.SequenceEqual(input.TaxCollection))
+                ) &&
+                (
+                    this.TaxCalculationBreakdowns == input.TaxCalculationBreakdowns ||
+                    (this.TaxCalculationBreakdowns != null &&
+                     this.TaxCalculationBreakdowns.SequenceEqual(input.TaxCalculationBreakdowns))
+                );
         }
 
         /// <summary>
@@ -96,6 +113,8 @@ namespace FikaAmazonAPI.AmazonSpApiSDK.Models.OrdersV20260101
                 int hashCode = 41;
                 if (this.TaxCollection != null)
                     hashCode = hashCode * 59 + this.TaxCollection.GetHashCode();
+                if (this.TaxCalculationBreakdowns != null)
+                    hashCode = hashCode * 59 + this.TaxCalculationBreakdowns.GetHashCode();
                 return hashCode;
             }
         }

@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using FikaAmazonAPI.Utils;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -11,7 +12,7 @@ namespace FikaAmazonAPI.AmazonSpApiSDK.Models.OrdersV20260101
     /// The primary condition category that broadly describes the item's state.
     /// </summary>
     /// <value>The primary condition category that broadly describes the item's state.</value>
-    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonConverter(typeof(SafeStringEnumConverter))]
     public enum ConditionTypeEnum
     {
         /// <summary>

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 
@@ -24,9 +25,11 @@ namespace FikaAmazonAPI.AmazonSpApiSDK.Models.OrdersV20260101
         /// Initializes a new instance of the <see cref="OrderProceeds" /> class.
         /// </summary>
         /// <param name="grandTotal">An amount of money, including units in the form of currency.</param>
-        public OrderProceeds(Money grandTotal)
+        /// <param name="breakdowns">The order-level breakdown of the proceeds (items, shipping, tax, delivery tip and so on).</param>
+        public OrderProceeds(Money grandTotal, List<OrderProceedsBreakdown> breakdowns)
         {
             this.GrandTotal = grandTotal;
+            this.Breakdowns = breakdowns;
         }
 
         /// <summary>
@@ -37,6 +40,13 @@ namespace FikaAmazonAPI.AmazonSpApiSDK.Models.OrdersV20260101
         public Money GrandTotal { get; set; }
 
         /// <summary>
+        /// The order-level breakdown of the proceeds (items, shipping, tax, delivery tip and so on).
+        /// </summary>
+        /// <value>The order-level breakdown of the proceeds (items, shipping, tax, delivery tip and so on).</value>
+        [DataMember(Name = "breakdowns", EmitDefaultValue = false)]
+        public List<OrderProceedsBreakdown> Breakdowns { get; set; }
+
+        /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
@@ -45,6 +55,7 @@ namespace FikaAmazonAPI.AmazonSpApiSDK.Models.OrdersV20260101
             var sb = new StringBuilder();
             sb.Append("class OrderProceeds {\n");
             sb.Append("  GrandTotal: ").Append(GrandTotal).Append("\n");
+            sb.Append("  Breakdowns: ").Append(Breakdowns).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -83,6 +94,11 @@ namespace FikaAmazonAPI.AmazonSpApiSDK.Models.OrdersV20260101
                     this.GrandTotal == input.GrandTotal ||
                     (this.GrandTotal != null &&
                     this.GrandTotal.Equals(input.GrandTotal))
+                ) &&
+                (
+                    this.Breakdowns == input.Breakdowns ||
+                    (this.Breakdowns != null &&
+                    this.Breakdowns.SequenceEqual(input.Breakdowns))
                 );
         }
 
@@ -97,6 +113,8 @@ namespace FikaAmazonAPI.AmazonSpApiSDK.Models.OrdersV20260101
                 int hashCode = 41;
                 if (this.GrandTotal != null)
                     hashCode = hashCode * 59 + this.GrandTotal.GetHashCode();
+                if (this.Breakdowns != null)
+                    hashCode = hashCode * 59 + this.Breakdowns.GetHashCode();
                 return hashCode;
             }
         }

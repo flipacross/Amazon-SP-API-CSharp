@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using FikaAmazonAPI.Utils;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -11,7 +12,7 @@ namespace FikaAmazonAPI.AmazonSpApiSDK.Models.OrdersV20260101
     /// The relationship between the current order and the associated order. Possible values: REPLACEMENT_ORIGINAL_ID, EXCHANGE_ORIGINAL_ID
     /// </summary>
     /// <value>The relationship between the current order and the associated order. Possible values: REPLACEMENT_ORIGINAL_ID, EXCHANGE_ORIGINAL_ID</value>
-    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonConverter(typeof(SafeStringEnumConverter))]
     public enum OrderAssociationTypeEnum
     {
         /// <summary>
