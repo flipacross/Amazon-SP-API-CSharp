@@ -56,6 +56,12 @@ namespace FikaAmazonAPI.AmazonSpApiSDK.Models.OrdersV20260101
         /// </summary>
         [EnumMember(Value = "DISCOUNT")]
         DISCOUNT = 7,
+
+        /// <summary>
+        /// Enum value for type DELIVERY_TIP
+        /// </summary>
+        [EnumMember(Value = "DELIVERY_TIP")]
+        DELIVERY_TIP = 8,
     }
 
 }

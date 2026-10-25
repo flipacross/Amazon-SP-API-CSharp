@@ -25,9 +25,11 @@ namespace FikaAmazonAPI.AmazonSpApiSDK.Models.OrdersV20260101
         /// Initializes a new instance of the <see cref="Cancellation" /> class.
         /// </summary>
         /// <param name="cancellationRequest">Detailed information about a cancellation request submitted for a specific order item.</param>
-        public Cancellation(CancellationRequest cancellationRequest)
+        /// <param name="cancellationExecution">Detailed information about the execution of a cancellation for a specific order item.</param>
+        public Cancellation(CancellationRequest cancellationRequest, CancellationExecution cancellationExecution)
         {
             this.CancellationRequest = cancellationRequest;
+            this.CancellationExecution = cancellationExecution;
         }
 
         /// <summary>
@@ -38,6 +40,13 @@ namespace FikaAmazonAPI.AmazonSpApiSDK.Models.OrdersV20260101
         public CancellationRequest CancellationRequest { get; set; }
 
         /// <summary>
+        /// Detailed information about the execution of a cancellation for a specific order item.
+        /// </summary>
+        /// <value>Detailed information about the execution of a cancellation for a specific order item.</value>
+        [DataMember(Name = "cancellationExecution", EmitDefaultValue = false)]
+        public CancellationExecution CancellationExecution { get; set; }
+
+        /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
@@ -46,6 +55,7 @@ namespace FikaAmazonAPI.AmazonSpApiSDK.Models.OrdersV20260101
             var sb = new StringBuilder();
             sb.Append("class Cancellation {\n");
             sb.Append("  CancellationRequest: ").Append(CancellationRequest).Append("\n");
+            sb.Append("  CancellationExecution: ").Append(CancellationExecution).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -84,6 +94,11 @@ namespace FikaAmazonAPI.AmazonSpApiSDK.Models.OrdersV20260101
                     this.CancellationRequest == input.CancellationRequest ||
                     (this.CancellationRequest != null &&
                     this.CancellationRequest.Equals(input.CancellationRequest))
+                ) &&
+                (
+                    this.CancellationExecution == input.CancellationExecution ||
+                    (this.CancellationExecution != null &&
+                    this.CancellationExecution.Equals(input.CancellationExecution))
                 );
         }
 
@@ -98,6 +113,8 @@ namespace FikaAmazonAPI.AmazonSpApiSDK.Models.OrdersV20260101
                 int hashCode = 41;
                 if (this.CancellationRequest != null)
                     hashCode = hashCode * 59 + this.CancellationRequest.GetHashCode();
+                if (this.CancellationExecution != null)
+                    hashCode = hashCode * 59 + this.CancellationExecution.GetHashCode();
                 return hashCode;
             }
         }
