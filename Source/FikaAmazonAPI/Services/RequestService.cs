@@ -120,6 +120,7 @@ namespace FikaAmazonAPI.Services
             var response = await RequestClient.ExecuteAsync<T>(currentRequest, cancellationToken);
             LogRequest(currentRequest, response);
             SaveLastRequestHeader(response.Headers);
+            InvokeRawResponseHook(currentRequest, response);
             await SleepForRateLimit(response.Headers, rateLimitType, cancellationToken);
             ParseResponse(response);
 
@@ -289,18 +290,54 @@ namespace FikaAmazonAPI.Services
             }
         }
 
+        /// <summary>
+        /// Value of the <c>x-amzn-RateLimit-Limit</c> header (requests per second Amazon grants this operation)
+        /// on the most recent response; null when the header was absent or unparsable.
+        /// Recorded on every response, independently of <see cref="AmazonCredential.IsActiveLimitRate"/>.
+        /// </summary>
+        public decimal? LastRateLimitHeader { get; private set; }
+
+        internal static decimal? ParseRateLimitHeader(string value)
+        {
+            if (decimal.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var rate))
+                return rate;
+            return null;
+        }
+
+        private void InvokeRawResponseHook(RestRequest request, RestResponse response)
+        {
+            var hook = AmazonCredential.OnRawResponse;
+            if (hook == null) return;
+
+            var code = (int)response.StatusCode;
+            if (code < 200 || code >= 300) return;
+
+            // Best-effort: a faulty callback must never fail or alter the request flow.
+            try
+            {
+                hook(new RawResponseContext
+                {
+                    Resource = request.Resource,
+                    Method = request.Method.ToString(),
+                    StatusCode = code,
+                    Content = response.Content
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogDebug(ex, "OnRawResponse hook failed");
+            }
+        }
+
         private async Task SleepForRateLimit(IReadOnlyCollection<RestSharp.Parameter> headers,
                    RateLimitType rateLimitType = RateLimitType.UNSET, CancellationToken cancellationToken = default)
         {
+            LastRateLimitHeader = null;
             try
             {
-                decimal rate = 0;
                 var limitHeader = headers.FirstOrDefault(a => a.Name == RateLimitLimitHeaderName);
-                if (limitHeader != null)
-                {
-                    var RateLimitValue = limitHeader.Value.ToString();
-                    decimal.TryParse(RateLimitValue, NumberStyles.Any, CultureInfo.InvariantCulture, out rate);
-                }
+                LastRateLimitHeader = ParseRateLimitHeader(limitHeader?.Value?.ToString());
+                decimal rate = LastRateLimitHeader ?? 0;
 
                 if (AmazonCredential.IsActiveLimitRate)
                 {

@@ -27,6 +27,14 @@ namespace FikaAmazonAPI
         public string SellerID { get; set; }
         public IWebProxy Proxy { get; set; }
 
+        /// <summary>
+        /// Optional hook invoked with the raw body of every 2xx SP-API response, before it is parsed.
+        /// The body may contain PII (buyer info, addresses); redact it before logging or persisting.
+        /// The hook is best-effort: exceptions thrown by the callback are swallowed (logged at debug level)
+        /// and never fail the request.
+        /// </summary>
+        public Action<RawResponseContext> OnRawResponse { get; set; }
+
         [Obsolete("Use the Proxy property instead.")]
         public string ProxyAddress
         {

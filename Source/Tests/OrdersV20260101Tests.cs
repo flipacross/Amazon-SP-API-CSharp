@@ -1,4 +1,5 @@
 using FikaAmazonAPI.AmazonSpApiSDK.Models.OrdersV20260101;
+using FikaAmazonAPI.Services;
 using Newtonsoft.Json;
 using System.IO;
 
@@ -53,6 +54,16 @@ namespace Tests
             var proceeds = JsonConvert.DeserializeObject<OrderProceeds>(json)!;
             Assert.That(proceeds.Breakdowns[0].Type, Is.EqualTo(ProceedsBreakdownTypeEnum.DELIVERY_TIP));
             Assert.That(proceeds.Breakdowns[0].Status, Is.EqualTo("PENDING"));
+        }
+
+        [TestCase("0.0056", 0.0056)]
+        [TestCase("0.5", 0.5)]
+        [TestCase("abc", null)]
+        [TestCase("", null)]
+        public void ParseRateLimitHeader_ParsesInvariantOrNull(string value, double? expected)
+        {
+            decimal? expectedValue = expected.HasValue ? (decimal?)(decimal)expected.Value : null;
+            Assert.That(RequestService.ParseRateLimitHeader(value), Is.EqualTo(expectedValue));
         }
     }
 }
