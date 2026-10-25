@@ -170,6 +170,8 @@ AmazonConnection amazonConnection = new AmazonConnection(new AmazonCredential()
 
 ### Order List
 For more order samples, please check [Here](https://github.com/abuzuhri/Amazon-SP-API-CSharp/blob/main/Source/FikaAmazonAPI.SampleCode/OrdersSample.cs).
+
+For Orders API v2026-01-01 (included data, per-page search, and the `AmazonCredential.OnRawResponse` raw payload hook), see [OrdersV20260101Sample.cs](https://github.com/flipacross/Amazon-SP-API-CSharp/blob/main/Source/FikaAmazonAPI.SampleCode/OrdersV20260101Sample.cs).
 ```CSharp
 ParameterOrderList searchOrderList = new ParameterOrderList();
 searchOrderList.CreatedAfter = DateTime.UtcNow.AddMinutes(-600000);
