@@ -307,5 +307,9 @@
         AplusContent_PostContentDocumentApprovalSubmission,
         AplusContent_PostContentDocumentSuspendSubmission,
 
+        Support_ListCases,
+        Support_GetCase,
+        Support_ListContacts,
+
     }
 }
