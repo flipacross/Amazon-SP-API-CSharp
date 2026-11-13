@@ -10,6 +10,9 @@
     <Version>1.9.34</Version>
     <AssemblyVersion>1.9.34</AssemblyVersion>
     <FileVersion>1.9.34</FileVersion>
+    <Version>1.9.34</Version>
+    <AssemblyVersion>1.9.34</AssemblyVersion>
+    <FileVersion>1.9.34</FileVersion>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/flipacross/Amazon-SP-API-CSharp</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
